@@ -44,10 +44,10 @@ class Bike:
 
 
     springs_k = np.array([
-            [None, self.k_spring_w1_w2, self.k_spring_w1_b1, self.k_spring_w1_b2]
-            [self.k_spring_w1_w2, None, self.k_spring_w2_b1, self.k_spring_w2_b2]
-            [self.k_spring_w1_b1, self.k_spring_w2_b1, None, self.k_spring_b1_b2]
-            [self.k_spring_w1_b2, self.k_spring_w2_b2, self.k_spring_b1_b2, None]])
+        [None, self.k_spring_w1_w2, self.k_spring_w1_b1, self.k_spring_w1_b2]
+        [self.k_spring_w1_w2, None, self.k_spring_w2_b1, self.k_spring_w2_b2]
+        [self.k_spring_w1_b1, self.k_spring_w2_b1, None, self.k_spring_b1_b2]
+        [self.k_spring_w1_b2, self.k_spring_w2_b2, self.k_spring_b1_b2, None]])
 
 
     springs_loss = np.array([
@@ -57,23 +57,21 @@ class Bike:
         [self.loss_spring_w1_b2, self.loss_spring_w2_b2, self.loss_spring_b1_b2, None]])
 
 
-    def get_coordinates():
+    def get_coordinates(self):
         
         return nodes_coordinates
 
-    def get_springs_k():
+    def get_springs_k(self):
 
         return springs_k
 
-    def get_springs_loss():
+    def get_springs_loss(self):
 
         return springs_loss
 
-    def get_torques():
+    def get_torques(self):
 
         return [wheel_1_torque, wheel_1_torque]
-
-    def 
 
     def spring_length(self, node_i, node_j):
         
@@ -88,8 +86,6 @@ class Bike:
 
         spring_length = (delta_x**2 + delta_y**2)**0.5
 
-        spring_coefficient = spring_k[node_i-1][]
-
         return spring_length
 
     springs_length = numpy.zeros((4,4))
@@ -101,10 +97,10 @@ class Bike:
             else:
                 spring_length[i][j] = springs_length(i, j)
 
-    def get_springs_length():
+    def get_springs_length(self):
 
         return springs_length
 
-    def get_masses():
+    def get_masses(self):
 
         return [wheel_1_mass, wheel_2_mass, body_1_mass, body_2_mass]
