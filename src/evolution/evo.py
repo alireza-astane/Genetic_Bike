@@ -16,7 +16,8 @@ class GeneticAlgorithm():
         self.population = np.random.randint(0, 2, (self.populationSize, self.numBitsPerIndividual))
         self.populationFitness = np.zeros(self.populationSize)
         self.parents = np.zeros((self.numParents, self.numBitsPerIndividual))
-
+        self.bikes = []
+        
         self.fitnessFunction = fitnessFunction
 
         self.elites = np.zeros((self.numGenerations, self.numBitsPerIndividual))
@@ -26,6 +27,35 @@ class GeneticAlgorithm():
 
         self.tolerance = tolerance
         
+
+    def bike2array(self, i, bike):
+        chromozome = []
+        chromozome.append(np.binary_repr(self.bikes[i].wheel_1_x, self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].wheel_1_y, self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].wheel_1_radius, self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].wheel_1_mass, self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].wheel_1_torque, self.numBitsPerIndividual))
+        
+        chromozome.append(np.binary_repr(self.bikes[i].wheel_2_x, self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].wheel_2_y, self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].wheel_2_radius, self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].wheel_2_mass,self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].wheel_2_torque, self.numBitsPerIndividual))
+        
+        chromozome.append(np.binary_repr(self.bikes[i].body_1_x, self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].body_1_y, self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].body_1_mass, self.numBitsPerIndividual))
+        
+        chromozome.append(np.binary_repr(self.bikes[i].body_2_x, self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].body_2_y, self.numBitsPerIndividual))
+        chromozome.append(np.binary_repr(self.bikes[i].body_2_mass,self.numBitsPerIndividual))
+        
+       
+        self.population[i] = chromozome
+        
+    
+        
+  
     def fit(self):
         self.calculateFitness()
         for i in range(self.numGenerations):
