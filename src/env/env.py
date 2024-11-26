@@ -2,7 +2,7 @@
 
 
 class env:
-    def __init__(self):
+    def __init__(self, g):
         self.trajectory = []
         self.n_bikes = 0
         self.time = 0  # time in seconds
@@ -11,6 +11,8 @@ class env:
         self.starting_positions = np.zeros((self.n_bikes, 2))
         self.ground_derivative = None
         self.ground = None
+        self.ms = np.zeros((self.n_bikes))
+        self.g = g
 
     def set_bikes(self, list_bikes):
         self.bikes = list_bikes
@@ -43,14 +45,6 @@ class env:
 
         return trajectory, scores
 
-    def calculate_forces(self, bike):
-        # calculate the forces acting on the bike based on the trajectory and env    #### ???????/
-        pass
-
-    def calculate_acceleration(self, bike):
-        # calculate the acceleration of the bike
-        pass
-
     def create_ground(self):
         # example
         self.ground = np.sin
@@ -81,3 +75,52 @@ class env:
         R = R + (theta1 + 2 * theta2 + 2 * theta3 + theta4) / 6
 
         return R, V, t
+
+    def calculate_acceleration(self, R, V, t):
+        return self.calculate_forces(R, V, t) / self.ms
+
+    def calculate_forces(self, R, V, t):
+        # calculate the forces acting on the bike based on the trajectory and env    #### ???????/
+        pass
+
+    def perpendicular_unit_vector(self, R, V, t):
+        # n_bikes*4*2
+        n_hat = np.zeros((self.n_bikes, 4, 2))
+        # n_hat[:,:2,:] = 0 no force to top massses
+        n_hat[:, 2, 0] = (
+            -self.ground_derivative(R[:, 2, 0])
+            / (1 + self.ground_derivative(R[:, 2, 0]) ** 2) ** 0.5
+        )
+        n_hat[:, 2, 1] = 1 / (1 + self.ground_derivative(R[:, 2, 0]) ** 2) ** 0.5
+        n_hat[:, 3, 0] = (
+            -self.ground_derivative(R[:, 3, 0])
+            / (1 + self.ground_derivative(R[:, 3, 0]) ** 2) ** 0.5
+        )
+        n_hat[:, 3, 1] = 1 / (1 + self.ground_derivative(R[:, 3, 0]) ** 2) ** 0.5
+
+        return n_hat
+
+    def parallel_unit_vector(self, R, V, t):
+        t_hat = np.zeros((self.n_bikes, 4, 2))
+        t_hat[:, 2, 0] = 1 / (1 + self.ground_derivative(R[:, 2, 0]) ** 2) ** 0.5
+        t_hat[:, 2, 1] = (
+            self.ground_derivative(R[:, 2, 0])
+            / (1 + self.ground_derivative(R[:, 2, 0]) ** 2) ** 0.5
+        )
+
+        t_hat[:, 3, 0] = 1 / (1 + self.ground_derivative(R[:, 3, 0]) ** 2) ** 0.5
+        t_hat[:, 3, 1] = (
+            self.ground_derivative(R[:, 3, 0])
+            / (1 + self.ground_derivative(R[:, 3, 0]) ** 2) ** 0.5
+        )
+
+        return t_hat
+
+    def weight(self, masses):
+        w = np.zeros((self.n_bikes, 4, 2))
+        w[:, :, 1] = -masses * self.g
+        return w
+
+    def turk(self, bike):
+        # calculate the torque on the bike  ????????
+        return np.zeros((self.n_bikes, 2))
