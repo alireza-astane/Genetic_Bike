@@ -24,46 +24,47 @@ class env:
 
     def set_bikes(self, list_bikes):
         self.bikes = list_bikes
+        self.n_bikes = len(list_bikes)
 
     def get_R(self):
         R = np.zeros((self.n_bikes, 4, 2))
-        for i in self.bikes:
-            R[i, :, :] = self.bikes[i].get_R() + self.starting_positions
+        for i in range(len(self.bikes)):
+            R[i, :, :] = self.bikes[i].get_coordinates() + self.starting_positions
         return R
 
     def get_V(self):
         V = np.zeros((self.n_bikes, 4, 2))
-        for i in self.bikes:
+        for i in range(len(self.bikes)):
             V[i, :, :] = self.bikes[i].get_V()
         return V
 
     def get_K(self):
         K = np.zeros((self.n_bikes, 4, 4))
-        for i in self.bikes:
+        for i in range(len(self.bikes)):
             K[i, :, :] = self.bikes[i].get_K()
         return K
 
     def get_B(self):
         B = np.zeros((self.n_bikes, 4, 4))
-        for i in self.bikes:
+        for i in range(len(self.bikes)):
             B[i, :, :] = self.bikes[i].get_B()
         return B
 
     def get_ms(self):
         ms = np.zeros((self.n_bikes, 4))
-        for i in self.bikes:
+        for i in range(len(self.bikes)):
             ms[i] = self.bikes[i].get_m()
         return ms
 
     def get_torks(self):
         torks = np.zeros((self.n_bikes, 4))
-        for i in self.bikes:
+        for i in range(len(self.bikes)):
             torks[i, :] = self.bikes[i].get_tork()
         return torks
 
     def get_init_lenghs(self):
         lengths = np.zeros((self.n_bikes, 4, 4))
-        for i in self.bikes:
+        for i in range(len(self.bikes)):
             lengths[i, :, :] = self.bikes[i].get_init_lengths()
 
         return lengths
@@ -150,14 +151,12 @@ class env:
             )  # remove the perpendicular component
             return Force
 
-    def create_ground(self, func=np.sin, derivative=np.cos):
-        self.ground = func
+    def set_ground(self, ground, derivative):
+        self.ground = ground
         self.ground_derivative = derivative
 
-        return self.ground, self.ground_derivative
-
-    def calculate_acceleration(self, R, V, t):
-        return self.calculate_forces(R, V, t) / self.ms
+    def calculate_acceleration(self, force):
+        return force / self.ms
 
     def perpendicular_unit_vector(self, R):
         # n_bikes*4*2
@@ -224,34 +223,118 @@ class env:
 
     def calculate_distance_from_ground(self, pos):
 
-        return np.min(
-            np.linalg.norm(
-                np.tile(self.ground, (3, 1, 1)).transpose((1, 0, 2)) - pos, axis=2
-            ),
-            axis=0,
+        norm = np.linalg.norm(
+            np.tile(self.ground, (3, 1, 1)).transpose((1, 0, 2)) - pos, axis=2
         )
+
+        return np.min(norm, axis=0), np.argmin(norm, axis=0)
+
+    def get_distance_unit_vector(self, R):
+        new_R = R.reshape(-1, 4, 1, 2)
+        new_R_T = new_R.transpose((0, 2, 1, 3))
+
+        distance = new_R_T - new_R
+
+        normalized_distances = distance / np.linalg.norm(distance, axis=3).reshape(
+            -1, 4, 4, 1
+        )
+        normalized_distances[:, range(4), range(4)] = 0
+        return normalized_distances
 
 
 # tests
 
 
-def test_calculate_distance_from_ground():
+def test_get_distance_unit_vector():
     test_env = env(9.8)
-    pos = np.array([[1, 1], [2, 4], [3, 9]])
+    R = np.array([[[1, 1], [2, 2], [3, 3], [4, 4]], [[1, 1], [2, 2], [3, 3], [4, 4]]])
+
+    normalized_distances = test_env.get_distance_unit_vector(R)
     assert np.all(
-        test_env.calculate_distance_from_ground(pos)
-        - np.array([0, np.sqrt(2), 3 * np.sqrt(2)])
+        normalized_distances
+        - np.array(
+            [
+                [
+                    [
+                        [0.0, 0.0],
+                        [0.70710678, 0.70710678],
+                        [0.70710678, 0.70710678],
+                        [0.70710678, 0.70710678],
+                    ],
+                    [
+                        [-0.70710678, -0.70710678],
+                        [0.0, 0.0],
+                        [0.70710678, 0.70710678],
+                        [0.70710678, 0.70710678],
+                    ],
+                    [
+                        [-0.70710678, -0.70710678],
+                        [-0.70710678, -0.70710678],
+                        [0.0, 0.0],
+                        [0.70710678, 0.70710678],
+                    ],
+                    [
+                        [-0.70710678, -0.70710678],
+                        [-0.70710678, -0.70710678],
+                        [-0.70710678, -0.70710678],
+                        [0.0, 0.0],
+                    ],
+                ],
+                [
+                    [
+                        [0.0, 0.0],
+                        [0.70710678, 0.70710678],
+                        [0.70710678, 0.70710678],
+                        [0.70710678, 0.70710678],
+                    ],
+                    [
+                        [-0.70710678, -0.70710678],
+                        [0.0, 0.0],
+                        [0.70710678, 0.70710678],
+                        [0.70710678, 0.70710678],
+                    ],
+                    [
+                        [-0.70710678, -0.70710678],
+                        [-0.70710678, -0.70710678],
+                        [0.0, 0.0],
+                        [0.70710678, 0.70710678],
+                    ],
+                    [
+                        [-0.70710678, -0.70710678],
+                        [-0.70710678, -0.70710678],
+                        [-0.70710678, -0.70710678],
+                        [0.0, 0.0],
+                    ],
+                ],
+            ]
+        )
         < 1e-5
     )
 
 
+def test_calculate_distance_from_ground():  ###? bikes ?
+    test_env = env(9.8)
+    pos = np.array([[1, 1], [2, 4], [3, 9]])
+    distances, touch_index = test_env.calculate_distance_from_ground(pos)
+    assert np.all(distances - np.array([0, np.sqrt(2), 3 * np.sqrt(2)]) < 1e-5)
+
+    assert np.all(touch_index == np.array([1000, 3000, 6000]))
+
+
 def test_evalute():
     test_env = env(9.8)
-    test_env.R = np.array([[[0, 0], [0, 0], [0, 0], [0, 0]]])
-    test_env.R0 = np.array([[[0, 0], [0, 0], [0, 0], [0, 0]]])
-    assert np.all(test_env.evaluate() == np.array([[[0, 0], [0, 0], [0, 0], [0, 0]]]))
+    test_env.R = np.array(
+        [[[1, 1], [2, 2], [3, 3], [4, 4]], [[1, 1], [2, 2], [3, 3], [4, 4]]]
+    )
+    test_env.R0 = np.array(
+        [[[1, 1], [2, 2], [3, 3], [4, 4]], [[1, 1], [2, 2], [3, 3], [4, 4]]]
+    )
+    assert np.all(test_env.evaluate() == 0)
 
 
 test_evalute()
 
 test_calculate_distance_from_ground()
+
+
+test_get_distance_unit_vector()
