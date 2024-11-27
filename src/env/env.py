@@ -75,6 +75,8 @@ class env:
         for i in range(self.n_bikes):
             radisuss[i] = self.bikes[i].get_wheels_radius()
 
+        return radisuss
+
     def set_bikes(self, list_bikes):
         self.bikes = list_bikes
         self.n_bikes = len(list_bikes)
