@@ -151,7 +151,7 @@ class env:
             self.ms.reshape((self.n_bikes, 4, 1)), 2, axis=2
         )
 
-        def cal_gravity_force(self):
+    def cal_gravity_force(self):
         W = np.zeros((self.n_bikes, 4, 2))
         W[:, :, 1] = self.ms * self.g  # shapes = (n_bikes * 4) * 2 = n_bikes * 4 * 2
         return W
@@ -192,8 +192,6 @@ class env:
         )
 
         return np.min(norm, axis=0), np.argmin(norm, axis=0)
-
-
 
     def calculate_forces(self, R, V, t):
         force = np.zeros((self.n_bikes, 4, 2))
