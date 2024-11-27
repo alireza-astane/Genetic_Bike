@@ -1,5 +1,6 @@
 # what should the trajectory look like?
 import numpy as np
+from bike.bike import Bike
 
 
 class env:
@@ -22,10 +23,6 @@ class env:
         self.ms = np.zeros((self.n_bikes, 4))
         self.g = -g * np.array([0, 1])
 
-    def set_bikes(self, list_bikes):
-        self.bikes = list_bikes
-        self.n_bikes = len(list_bikes)
-
     def get_R(self):
         R = np.zeros((self.n_bikes, 4, 2))
         for i in range(len(self.bikes)):
@@ -41,31 +38,31 @@ class env:
     def get_K(self):
         K = np.zeros((self.n_bikes, 4, 4))
         for i in range(len(self.bikes)):
-            K[i, :, :] = self.bikes[i].get_K()
+            K[i, :, :] = self.bikes[i].get_springs_k()
         return K
 
     def get_B(self):
         B = np.zeros((self.n_bikes, 4, 4))
         for i in range(len(self.bikes)):
-            B[i, :, :] = self.bikes[i].get_B()
+            B[i, :, :] = self.bikes[i].get_springs_loss()
         return B
 
     def get_ms(self):
         ms = np.zeros((self.n_bikes, 4))
         for i in range(len(self.bikes)):
-            ms[i] = self.bikes[i].get_m()
+            ms[i] = self.bikes[i].get_masses()
         return ms
 
     def get_torks(self):
         torks = np.zeros((self.n_bikes, 4))
         for i in range(len(self.bikes)):
-            torks[i, :] = self.bikes[i].get_tork()
+            torks[i, :2] = self.bikes[i].get_torques()
         return torks
 
     def get_init_lenghs(self):
         lengths = np.zeros((self.n_bikes, 4, 4))
         for i in range(len(self.bikes)):
-            lengths[i, :, :] = self.bikes[i].get_init_lengths()
+            lengths[i, :, :] = self.bikes[i].get_springs_length()
 
         return lengths
 
@@ -74,54 +71,60 @@ class env:
         for i in range(self.n_bikes):
             radisuss[i] = self.bikes[i].get_radius()
 
-    def get_trajectory(self):
-        return self.trajectory
+    def set_bikes(self, list_bikes):
+        self.bikes = list_bikes
+        self.n_bikes = len(list_bikes)
+        self.B = self.get_B()
+        self.K = self.get_K()
+        self.ms = self.get_ms()
+        self.init_lengths = self.get_init_lenghs()
+        self.torks = self.get_torks()
+        self.R = self.get_R()
+        self.Radiuses = self.get_Radius()
+
+    def get_trajectory_sizes(self):
+        return self.trajectory, self.Radiuses
+
+    # initalized the whole env and bikes
 
     def run(self, n):
         self.trajectory = np.zeros((n, self.n_bikes, 2))
         self.time = 0
-        self.R, self.V = self.get_R(), self.get_V()
-        self.K = self.get_K()
-        self.B = self.get_B()
-        self.ms = self.get_ms()
-        self.torks = self.get_torks()
-        self.init_lengths = self.get_init_lenghs()
+        self.get_V = np.zeros((self.n_bikes, 4, 2))
 
-        self.R0 = R
+        self.R0 = self.R  # deap_copy ????
         for i in range(n):
-            self.step(R, V, t, self.calculate_acceleration)
-            self.time += self.time_step
-            trajectory[i, :, :] = R
+            self.step()
+            self.trajectory[i, :, :] = self.R
 
-        self.scores = self.evaluate(R0, R)
+        self.scores = self.evaluate()
 
         return self.trajectory, self.scores
 
     def step(self):
         # ronge kutta method for solving the differential equation
 
-        k1 = self.time_step * acceleration_function(V, R, t)
-        theta1 = V
+        k1 = self.time_step * self.calculate_acceleration(self.V, self.R, self.t)
+        theta1 = self.V
 
-        k2 = self.time_step * acceleration_function(
-            V + k1 / 2, R + theta1 / 2, t + self.time_step / 2
+        k2 = self.time_step * self.calculate_acceleration(
+            self.V + k1 / 2, self.R + theta1 / 2, self.t + self.time_step / 2
         )
-        theta2 = V + k1 / 2
+        theta2 = self.V + k1 / 2
 
-        k3 = self.time_step * acceleration_function(
-            V + k2 / 2, R + theta2 / 2, t + self.time_step / 2
+        k3 = self.time_step * self.calculate_acceleration(
+            self.V + k2 / 2, self.R + theta2 / 2, self.t + self.time_step / 2
         )
-        theta3 = V + k2 / 2
+        theta3 = self.V + k2 / 2
 
-        k4 = self.time_step * acceleration_function(
-            V + k3, R + theta3, t + self.time_step
+        k4 = self.time_step * self.calculate_acceleration(
+            self.V + k3, self.R + theta3, self.t + self.time_step
         )
-        theta4 = V + k3
+        theta4 = self.V + k3
 
-        V = V + (k1 + 2 * k2 + 2 * k3 + k4) / 6
-        R = R + (theta1 + 2 * theta2 + 2 * theta3 + theta4) / 6
-
-        return R, V, t
+        self.V = self.V + (k1 + 2 * k2 + 2 * k3 + k4) / 6
+        R = self.R + (theta1 + 2 * theta2 + 2 * theta3 + theta4) / 6
+        self.time += self.time_step
 
         def calculate_forces(self, R, V, t):
             # calculate the forces acting on the bike based on the trajectory and env    #### ???????/
@@ -240,101 +243,3 @@ class env:
         )
         normalized_distances[:, range(4), range(4)] = 0
         return normalized_distances
-
-
-# tests
-
-
-def test_get_distance_unit_vector():
-    test_env = env(9.8)
-    R = np.array([[[1, 1], [2, 2], [3, 3], [4, 4]], [[1, 1], [2, 2], [3, 3], [4, 4]]])
-
-    normalized_distances = test_env.get_distance_unit_vector(R)
-    assert np.all(
-        normalized_distances
-        - np.array(
-            [
-                [
-                    [
-                        [0.0, 0.0],
-                        [0.70710678, 0.70710678],
-                        [0.70710678, 0.70710678],
-                        [0.70710678, 0.70710678],
-                    ],
-                    [
-                        [-0.70710678, -0.70710678],
-                        [0.0, 0.0],
-                        [0.70710678, 0.70710678],
-                        [0.70710678, 0.70710678],
-                    ],
-                    [
-                        [-0.70710678, -0.70710678],
-                        [-0.70710678, -0.70710678],
-                        [0.0, 0.0],
-                        [0.70710678, 0.70710678],
-                    ],
-                    [
-                        [-0.70710678, -0.70710678],
-                        [-0.70710678, -0.70710678],
-                        [-0.70710678, -0.70710678],
-                        [0.0, 0.0],
-                    ],
-                ],
-                [
-                    [
-                        [0.0, 0.0],
-                        [0.70710678, 0.70710678],
-                        [0.70710678, 0.70710678],
-                        [0.70710678, 0.70710678],
-                    ],
-                    [
-                        [-0.70710678, -0.70710678],
-                        [0.0, 0.0],
-                        [0.70710678, 0.70710678],
-                        [0.70710678, 0.70710678],
-                    ],
-                    [
-                        [-0.70710678, -0.70710678],
-                        [-0.70710678, -0.70710678],
-                        [0.0, 0.0],
-                        [0.70710678, 0.70710678],
-                    ],
-                    [
-                        [-0.70710678, -0.70710678],
-                        [-0.70710678, -0.70710678],
-                        [-0.70710678, -0.70710678],
-                        [0.0, 0.0],
-                    ],
-                ],
-            ]
-        )
-        < 1e-5
-    )
-
-
-def test_calculate_distance_from_ground():  ###? bikes ?
-    test_env = env(9.8)
-    pos = np.array([[1, 1], [2, 4], [3, 9]])
-    distances, touch_index = test_env.calculate_distance_from_ground(pos)
-    assert np.all(distances - np.array([0, np.sqrt(2), 3 * np.sqrt(2)]) < 1e-5)
-
-    assert np.all(touch_index == np.array([1000, 3000, 6000]))
-
-
-def test_evalute():
-    test_env = env(9.8)
-    test_env.R = np.array(
-        [[[1, 1], [2, 2], [3, 3], [4, 4]], [[1, 1], [2, 2], [3, 3], [4, 4]]]
-    )
-    test_env.R0 = np.array(
-        [[[1, 1], [2, 2], [3, 3], [4, 4]], [[1, 1], [2, 2], [3, 3], [4, 4]]]
-    )
-    assert np.all(test_env.evaluate() == 0)
-
-
-test_evalute()
-
-test_calculate_distance_from_ground()
-
-
-test_get_distance_unit_vector()

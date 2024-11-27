@@ -1,6 +1,7 @@
 from bike.bike import Bike
 from env.env import env
 import numpy as np
+from pprint import pprint
 
 my_env = env(9.8)
 
@@ -18,9 +19,3 @@ my_bike_3 = Bike(
 )
 
 my_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
-
-
-print(my_env.get_R())
-
-
-print(my_env.get_ms())
