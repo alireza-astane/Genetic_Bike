@@ -10,7 +10,7 @@ before_script:
 test-example:
   script:
     - pip install pytest
-    - pytest -vvv tests
+    - python -m pytest -vvv tests
     
 
 
