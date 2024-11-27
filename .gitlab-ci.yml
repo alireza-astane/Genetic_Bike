@@ -1,0 +1,7 @@
+image: python:latest
+
+test-example:
+  script:
+    - pip install pytest
+    - pytest -vvv tests
+    
