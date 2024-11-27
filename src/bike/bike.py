@@ -82,6 +82,10 @@ class Bike:
 
         return [self.wheel_1_torque, self.wheel_1_torque]
 
+    def get_wheels_radius(self):
+
+        return [self.wheel_1_radius, self.wheel_2_radius]
+
     def spring_length(self, node_i, node_j):
         
         nodes_coordinates = np.array([
