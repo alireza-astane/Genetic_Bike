@@ -6,5 +6,5 @@ def test_get_get_masses():
         0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0)
-    expectes_res = [0,0,0,0]
-    assert(test_bike.get_masses() == expectes_res)
+    expectes_masses = [0,0,0,0]
+    assert(test_bike.get_masses() == expectes_masses)
