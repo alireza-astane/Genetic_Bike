@@ -2,6 +2,7 @@ image: python:latest
 
 test-example:
   script:
+    - pip install -r requirements.txt
     - pip install pytest
     - pytest -vvv tests
     
