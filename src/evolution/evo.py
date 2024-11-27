@@ -64,18 +64,39 @@ class GeneticAlgorithm():
         return deci
  
     def fit(self):
+
+        print("Initial population:")
+        print(self.population)
+        
         self.calculateFitness()
+        print("Initial fitness:")
+        print(self.populationFitness)
+
         for i in range(self.numGenerations):
+            print(f"\nGeneration {i + 1}:")
             
             self.elites[i] = self.population[np.argmax(self.populationFitness)].copy()
+            print("Elites:")
+            print(self.elites[i])
+
             self.selection()
+            print("Selected Parents:")
+            print(self.parents)
+
             self.crossover()
+            print("Population after crossing:")
+            print(self.population)
+
             self.mutation()
+            print("Population after mutation:")
+            print(self.population)
             # Update fitness
             self.population[np.argmin(self.populationFitness)] = self.elites[i].copy()
 
             self.calculateStatistics()
             self.calculateFitness()
+            print("Generation Fitness:")
+            print(self.populationFitness)
 
             if self.tolerance < self.maxValues[-1]:
                 print("Last iteration", i)
