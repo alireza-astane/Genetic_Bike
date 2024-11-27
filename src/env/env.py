@@ -4,24 +4,31 @@ from bike.bike import Bike
 
 
 class env:
-    def __init__(self, g=9.8):
+    def __init__(self, g=-9.8):
         self.trajectory = []
         self.n_bikes = 0
         self.t = 0  # t in seconds
-        self.t_step = 1  # t step in seconds
+        self.t_step = 0.01  # t step in seconds
         self.bikes = []
         self.starting_positions = np.array([0, 10])  # ???
         self.x_max = 1000
         self.delta_x = 0.001
         self.ground_derivative = 1  ## examplle
+        # self.ground = np.array(
+        #     [
+        #         np.linspace(0, self.x_max, int(self.x_max / self.delta_x)),
+        #         np.linspace(0, self.x_max, int(self.x_max / self.delta_x)),
+        #     ]
+        # ).T  # ground function
+
         self.ground = np.array(
             [
                 np.linspace(0, self.x_max, int(self.x_max / self.delta_x)),
-                np.linspace(0, self.x_max, int(self.x_max / self.delta_x)),
+                0 * np.linspace(0, self.x_max, int(self.x_max / self.delta_x)),
             ]
         ).T  # ground function
         self.ms = np.zeros((self.n_bikes, 4))
-        self.g = -g * np.array([0, 1])
+        self.g = g
 
     def set_ground(self, ground, derivative):
         self.ground = ground
@@ -42,13 +49,16 @@ class env:
     def get_K(self):
         K = np.zeros((self.n_bikes, 4, 4))
         for i in range(len(self.bikes)):
-            K[i, :, :] = self.bikes[i].get_springs_k()
+            ks = self.bikes[i].get_springs_k()
+            K[i, :, :] = ks - np.diag(np.sum(ks, axis=0))
+
         return K
 
     def get_B(self):
         B = np.zeros((self.n_bikes, 4, 4))
         for i in range(len(self.bikes)):
-            B[i, :, :] = self.bikes[i].get_springs_loss()
+            bs = self.bikes[i].get_springs_loss()
+            B[i, :, :] = bs - np.diag(np.sum(bs, axis=0))
         return B
 
     def get_ms(self):
@@ -92,18 +102,6 @@ class env:
     def get_trajectory_sizes(self):
         return self.trajectory, self.Radiuses
 
-    def get_distance_unit_vector(self, R):
-        new_R = R.reshape(-1, 4, 1, 2)
-        new_R_T = new_R.transpose((0, 2, 1, 3))
-
-        distance = new_R_T - new_R
-
-        normalized_distances = distance / np.linalg.norm(distance, axis=3).reshape(
-            -1, 4, 4, 1
-        )
-        normalized_distances[:, range(4), range(4)] = 0
-        return normalized_distances
-
     def evaluate(self):
         delta_X = self.R[:, :, 0] - self.R0[:, :, 0]
         return np.sum(delta_X * self.ms, axis=1) / np.sum(self.ms, axis=1)
@@ -145,8 +143,45 @@ class env:
         theta4 = self.V + k3
 
         self.V = self.V + (k1 + 2 * k2 + 2 * k3 + k4) / 6
-        R = self.R + (theta1 + 2 * theta2 + 2 * theta3 + theta4) / 6
+        self.R = self.R + (theta1 + 2 * theta2 + 2 * theta3 + theta4) / 6
         self.t += self.t_step
+
+    def calculate_acceleration(self, V, R, t):
+        return self.calculate_forces(R, V, t) / np.repeat(
+            self.ms.reshape((self.n_bikes, 4, 1)), 2, axis=2
+        )
+
+        def cal_gravity_force(self):
+        W = np.zeros((self.n_bikes, 4, 2))
+        W[:, :, 1] = self.ms * self.g  # shapes = (n_bikes * 4) * 2 = n_bikes * 4 * 2
+        return W
+
+    def get_distance_distance_unit_vector(self, R):
+        R = R.reshape(self.n_bikes, 4, 1, 2)
+        tiled = np.tile(R, (1, 1, 4, 1))
+
+        transposed = tiled.transpose((0, 2, 1, 3))
+
+        distance = transposed - tiled
+
+        normalized_distances = distance / np.linalg.norm(distance, axis=3).reshape(
+            -1, 4, 4, 1
+        )
+        normalized_distances[:, range(4), range(4)] = 0
+
+        return distance, normalized_distances
+
+    def cal_spring_force(self, R):  ### values not tested
+        d, d_hat = self.get_distance_distance_unit_vector(R)
+
+        x = d - (d_hat * self.init_lengths.reshape(-1, 4, 4, 1))  # -/+ ?
+
+        spring_force = np.sum(-self.K.reshape(-1, 4, 4, 1) * x, axis=1)  # or axis = 1,2
+
+        return spring_force
+
+    def cal_damping_force(self, V):
+        return -self.B @ V
 
     # checked functions above
 
@@ -158,37 +193,33 @@ class env:
 
         return np.min(norm, axis=0), np.argmin(norm, axis=0)
 
+
+
     def calculate_forces(self, R, V, t):
-        # calculate the forces acting on the bike based on the trajectory and env    #### ???????/
-        W = self.ms * self.g  # shapes = (n_bikes * 4) * 2 = n_bikes * 4 * 2
-        damping_force = (
-            -self.B @ V
-        )  # shape = (n_bikes * 4 * 4 ) @ (n_bikes * 4 * 2 ) = n_bikes * 4 * 2
-        initial_lengths = self.init_lengths @ self.get_distance_unit_vector(
-            R
-        )  # shape = (n_bikes * 4 * 4) @ (n_bikes * 4 * 2) = n_bikes * 4 * 2
-        spring_force = -self.K @ (
-            R - self.initial_lengths
-        )  # shape = (n_bikes * 4 * 4) @ (n_bikes * 4 * 2) = n_bikes * 4 * 2
-        n_hat = self.perpendicular_unit_vector(R)  # shape = n_bikes * 4 * 2
-        t_hat = self.parallel_unit_vector(R)  # shape = n_bikes * 4 * 2
-        C = self.get_connected(R)  # shape = n_bikes * 4
+        force = np.zeros((self.n_bikes, 4, 2))
 
-        turk_force = (
-            self.torks * C @ t_hat
-        )  # shape = (n_bikes * 4) * (n_bikes * 4) * (n_bikes * 4 * 2) = n_bikes * 4 * 2   ?????
+        W = self.cal_gravity_force()
+        force += W
+        spring_force = self.cal_spring_force(R)
+        force += spring_force
+        damping_force = self.cal_damping_force(V)
+        force += damping_force
 
-        # M * X_vec.. = - K (X_vec - l0 * d_hat) - B * V_vec + W_vec + tork * T * C + N * C
+        # n_hat = self.perpendicular_unit_vector(R)  # shape = n_bikes * 4 * 2
+        # t_hat = self.parallel_unit_vector(R)  # shape = n_bikes * 4 * 2
+        # C = self.get_connected(R)  # shape = n_bikes * 4
 
-        Force = W + damping_force + spring_force + turk_force
-        Force -= (
-            np.dot(Force, n_hat, axis=...) * n_hat
-        )  # remove the perpendicular component
-        return Force
+        # turk_force = (
+        #     self.torks * C @ t_hat
+        # )  # shape = (n_bikes * 4) * (n_bikes * 4) * (n_bikes * 4 * 2) = n_bikes * 4 * 2   ?????
 
-    def calculate_acceleration(self, R, V, t):
-        # return force / self.ms
-        return 0
+        # # M * X_vec.. = - K (X_vec - l0 * d_hat) - B * V_vec + W_vec + tork * T * C + N * C
+
+        # Force = W + damping_force + spring_force + turk_force
+        # Force -= (
+        #     np.dot(Force, n_hat, axis=...) * n_hat
+        # )  # remove the perpendicular component
+        return force
 
     def perpendicular_unit_vector(self, R):
         # n_bikes*4*2

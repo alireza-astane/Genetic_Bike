@@ -4,10 +4,11 @@ import matplotlib.animation as animation
 
 
 class Vis:
-    def __init__(self, trajectory, radiuss, steps):
+    def __init__(self, trajectory, radiuss, steps, ground):
         self.trajectory = trajectory
         self.radiuss = radiuss
         self.steps = steps
+        self.ground = ground
 
     def run(self):
         self.figure = plt.figure()
@@ -21,8 +22,10 @@ class Vis:
 
     def animate(self, i):
         plt.cla()
-        # axes.set_xlim(-10, 10)
-        # axes.set_ylim(-10, 10)
+        self.axes.set_xlim(-20, 20)
+        self.axes.set_ylim(-20, 20)
+
+        plt.plot(self.ground[:, 0], self.ground[:, 1], color="black")
 
         ball1 = plt.Circle(
             self.trajectory[i, 0], radius=self.radiuss[0], color="yellow"
