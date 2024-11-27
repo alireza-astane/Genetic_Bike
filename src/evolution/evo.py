@@ -53,8 +53,6 @@ class GeneticAlgorithm():
        
         self.population[i] = chromozome
         
-    
-        
   
     def fit(self):
         self.calculateFitness()
@@ -79,14 +77,6 @@ class GeneticAlgorithm():
         for i in range(self.populationSize):
             self.populationFitness[i] = self.fitnessFunction(self, self.population[i])
 
-    def binaryToDecimal(self, individual, lowerBound, upperBound):
-        x = 0
-        for k, bit in enumerate(individual[::-1]):
-            x += (bit * 2**k)
-
-        x = lowerBound + ((upperBound - lowerBound) / (2**self.numBitsPerIndividual - 1)) * x
-        return x
-        
     def selection(self):
         # Tournament
         for i in range(self.numParents):
