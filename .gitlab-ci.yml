@@ -4,5 +4,6 @@ test-example:
   script:
     - pip install -r requirements.txt
     - pip install pytest
+    - echo pwd
     - pytest -vvv tests
     
