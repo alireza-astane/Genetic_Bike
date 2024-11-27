@@ -29,31 +29,40 @@ class GeneticAlgorithm():
         
 
     def bike2array(self, i, bike):
-        chromozome = []
-        chromozome.append(np.binary_repr(self.bikes[i].wheel_1_x, self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].wheel_1_y, self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].wheel_1_radius, self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].wheel_1_mass, self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].wheel_1_torque, self.numBitsPerIndividual))
+        chrom = []
+        scale = 10  
+        nbit=self.numBitsPerIndividual
         
-        chromozome.append(np.binary_repr(self.bikes[i].wheel_2_x, self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].wheel_2_y, self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].wheel_2_radius, self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].wheel_2_mass,self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].wheel_2_torque, self.numBitsPerIndividual))
+        chrom.append(np.binary_repr(int(self.bikes[i].wheel_1_x * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].wheel_1_y * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].wheel_1_radius * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].wheel_1_mass * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].wheel_1_torque * scale), nbit))
         
-        chromozome.append(np.binary_repr(self.bikes[i].body_1_x, self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].body_1_y, self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].body_1_mass, self.numBitsPerIndividual))
+        chrom.append(np.binary_repr(int(self.bikes[i].wheel_2_x * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].wheel_2_y * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].wheel_2_radius * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].wheel_2_mass * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].wheel_2_torque * scale), nbit))
         
-        chromozome.append(np.binary_repr(self.bikes[i].body_2_x, self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].body_2_y, self.numBitsPerIndividual))
-        chromozome.append(np.binary_repr(self.bikes[i].body_2_mass,self.numBitsPerIndividual))
+        chrom.append(np.binary_repr(int(self.bikes[i].body_1_x * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].body_1_y * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].body_1_mass * scale), nbit))
         
-       
-        self.population[i] = chromozome
+        chrom.append(np.binary_repr(int(self.bikes[i].body_2_x * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].body_2_y * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].body_2_mass * scale), nbit))
         
-  
+        self.population[i] = chrom
+
+    def binarytobike(self, chrom):
+        scale = 10
+        deci = []
+        for binary in chrom:
+            decimal = int(str(binary), 2)
+            deci.append(decimal / scale)
+        return deci
+ 
     def fit(self):
         self.calculateFitness()
         for i in range(self.numGenerations):
