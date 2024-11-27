@@ -5,5 +5,5 @@ test-example:
     - pip install -r requirements.txt
     - pip install pytest
     - pwd
-    - pytest -vvv tests
+    - python -m pytest -vvv tests
     
