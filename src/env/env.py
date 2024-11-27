@@ -1,6 +1,6 @@
 # what should the trajectory look like?
 import numpy as np
-from bike.bike import Bike
+from src.bike.bike import Bike
 
 
 class env:
