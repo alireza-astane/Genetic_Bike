@@ -19,3 +19,6 @@ my_bike_3 = Bike(
 )
 
 my_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
+
+
+print(my_env.get_distance_unit_vector(my_env.R))
