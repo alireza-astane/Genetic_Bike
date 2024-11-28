@@ -1,11 +1,12 @@
 import numpy as np
 import random
+from env.env import env
 
 class GeneticAlgorithm():
     def __init__(self, populationSize, numBitsPerIndividual, numGenerations, crossoverProbability, mutationProbability, numParents, fitnessFunction, tolerance, numCompetitors=2):
 
-        np.random.seed(42)
-        random.seed(42)
+        # np.random.seed(42)
+        # random.seed(42)
 
 
         self.numBitsPerIndividual = numBitsPerIndividual
@@ -80,12 +81,12 @@ class GeneticAlgorithm():
             deci.append(decimal / scale)
         return deci
  
-    def fit(self):
+    def fit(self, my_env):
 
         print("Initial population:")
         print(self.population)
         
-        self.calculateFitness()
+        self.calculateFitness(my_env)
         print("Initial fitness:")
         print(self.populationFitness)
 
@@ -111,7 +112,7 @@ class GeneticAlgorithm():
             self.population[np.argmin(self.populationFitness)] = self.elites[i].copy()
 
             self.calculateStatistics()
-            self.calculateFitness()
+            self.calculateFitness(my_env)
             print("Generation Fitness:")
             print(self.populationFitness)
 
@@ -120,9 +121,11 @@ class GeneticAlgorithm():
                 self.elites[i] = self.population[np.argmax(self.populationFitness)]
                 break
 
-    def calculateFitness(self):
-        for i in range(self.populationSize):
-            self.populationFitness[i] = self.fitnessFunction(self, self.population[i])
+    def calculateFitness(self, my_env):
+        steps = 20
+
+        trajectory, scores = my_env.run(steps)
+        self.populationFitness = scores
 
     def selection(self):
         # Tournament
