@@ -3,7 +3,7 @@
 # add tests
 # fix evaluate
 import numpy as np
-from src.bike.bike import Bike
+from bike.bike import Bike
 from tqdm import tqdm
 
 
@@ -131,6 +131,10 @@ class env:
         # wheels_x[where_failed[:, 0], where_failed[:, 1], where_failed[:, 2]].shape
 
         mass_center_change[failed] = 0
+
+        print("delta_X:", delta_X)
+        print("self.ms:", self.ms)
+        print("mass_center_change:", mass_center_change)
 
         return mass_center_change
 

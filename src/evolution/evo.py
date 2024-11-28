@@ -5,8 +5,8 @@ from env.env import env
 class GeneticAlgorithm():
     def __init__(self, populationSize, numBitsPerIndividual, numGenerations, crossoverProbability, mutationProbability, numParents, fitnessFunction, tolerance, numCompetitors=2):
 
-        # np.random.seed(42)
-        # random.seed(42)
+        np.random.seed(42)
+        random.seed(42)
 
 
         self.numBitsPerIndividual = numBitsPerIndividual
@@ -126,6 +126,9 @@ class GeneticAlgorithm():
 
         trajectory, scores = my_env.run(steps)
         self.populationFitness = scores
+
+        print("Trajectory:", trajectory)
+        print("Scores:", scores)
 
     def selection(self):
         # Tournament
