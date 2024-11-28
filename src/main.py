@@ -10,7 +10,7 @@ my_env = env(-9.8)
     # Genetic Algorithm parameters
 population_size = 10
 num_bits_per_individual = 28  # Adjust based on your scale and precision needs
-num_generations = 100
+num_generations = 10
 crossover_probability = 0.7
 mutation_probability = 0.05
 num_parents = 4
@@ -34,41 +34,90 @@ decoded_params =  np.zeros(28)
 # Create some dummy bikes (this step might be different depending on your actual Bike class implementation)
 for _ in range(population_size):
     bike = Bike(
-    1,
-    1,
-    2,
-    3,
-    1,
-    4,
-    1,
-    2,
-    3,
-    0,
-    1,
-    3,
-    2,
-    4,
-    3,
-    2,
-    100,
-    100,
-    100,
-    100,
-    100,
-    100,
-    10,
-    10,
-    10,
-    10,
-    10,
-    10
+    1 + 0.2 * np.random.rand(),
+    1 + 0.2 * np.random.rand(),
+    2 + 0.2 * np.random.rand(),
+    3 + 0.2 * np.random.rand(),
+    1 + 0.2 * np.random.rand(),
+    4 + 0.2 * np.random.rand(),
+    1 + 0.2 * np.random.rand(),
+    2 + 0.2 * np.random.rand(),
+    3 + 0.2 * np.random.rand(),
+    0 + 0.2 * np.random.rand(),
+    1 + 0.2 * np.random.rand(),
+    3 + 0.2 * np.random.rand(),
+    2 + 0.2 * np.random.rand(),
+    4 + 0.2 * np.random.rand(),
+    3 + 0.2 * np.random.rand(),
+    2 + 0.2 * np.random.rand(),
+    100 + 2 * np.random.rand(),
+    100 + 2 * np.random.rand(),
+    100 + 2 * np.random.rand(),
+    100 + 2 * np.random.rand(),
+    100 + 2 * np.random.rand(),
+    100 + 2 * np.random.rand(),
+    10 + 1 * np.random.rand(),
+    10 + 1 * np.random.rand(),
+    10 + 1 * np.random.rand(),
+    10 + 1 * np.random.rand(),
+    10 + 1 * np.random.rand(),
+    10 + 1 * np.random.rand(),
     )
     ga.bikes.append(bike)
     ga.bike2array(len(ga.bikes) - 1, bike)
 
-
-
 my_env.set_bikes(ga.bikes)
+
+print("Initial population:")
+print(ga.population)
+
+# Calculate fitness
+steps = 20
+trajectory, scores = my_env.run(steps)
+ga.populationFitness = scores
+print("Initial fitness:")
+print(ga.populationFitness)
+
+for i in range(ga.numGenerations):
+    print(f"\nGeneration {i + 1}:")
+    
+    ga.elites[i] = ga.population[np.argmax(ga.populationFitness)].copy()
+    print("Elites:")
+    print(ga.elites[i])
+
+    ga.selection()
+    print("Selected Parents:")
+    print(ga.parents)
+
+    ga.crossover()
+    print("Population after crossing:")
+    print(ga.population)
+
+    ga.mutation()
+    print("Population after mutation:")
+    print(ga.population)
+    # Update fitness
+    ga.population[np.argmin(ga.populationFitness)] = ga.elites[i].copy()
+
+    ga.calculateStatistics()
+    
+    # Calculate fitness
+    steps = 20
+    trajectory, scores = my_env.run(steps)
+    ga.populationFitness = scores
+    
+    print("Generation Fitness:")
+    print(ga.populationFitness)
+
+    if ga.tolerance < ga.maxValues[-1]:
+        print("Last iteration", i)
+        ga.elites[i] = ga.population[np.argmax(ga.populationFitness)]
+        break
+
+
+
+
+
 
 # Run the genetic algorithm
 ga.fit(my_env)
@@ -77,12 +126,12 @@ ga.fit(my_env)
 
 # trajectory, scores = my_env.run(steps)
 
-# print(scores)
+print(scores)
 
-# trajectory, sizes = my_env.get_trajectory_sizes()
+trajectory, sizes = my_env.get_trajectory_sizes()
 
 
 
-# my_vis = Vis(trajectory[:, 0], sizes[0], steps, my_env.ground)
+my_vis = Vis(trajectory[:, 0], sizes[0], steps, my_env.ground)
 
-# my_vis.run()
+my_vis.run()
