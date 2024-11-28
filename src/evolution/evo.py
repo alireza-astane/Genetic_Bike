@@ -52,7 +52,21 @@ class GeneticAlgorithm():
         chrom.append(np.binary_repr(int(self.bikes[i].body_2_x * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].body_2_y * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].body_2_mass * scale), nbit))
-        
+
+        chrom.append(np.binary_repr(int(self.bikes[i].k_spring_w1_w2 * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].k_spring_w1_b1 * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].k_spring_w1_b2 * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].k_spring_w2_b1 * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].k_spring_w2_b2 * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].k_spring_b1_b2 * scale), nbit))
+
+        chrom.append(np.binary_repr(int(self.bikes[i].loss_spring_w1_w2 * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].loss_spring_w1_b1 * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].loss_spring_w1_b2 * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].loss_spring_w2_b1 * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].loss_spring_w2_b2 * scale), nbit))
+        chrom.append(np.binary_repr(int(self.bikes[i].loss_spring_b1_b2 * scale), nbit))
+
         self.population[i] = chrom
 
     def binarytobike(self, chrom):
