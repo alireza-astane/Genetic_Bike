@@ -14,16 +14,16 @@ my_bike_1 = Bike(
     2,
     3,
     1,
-    4,
+    8,
     1,
     2,
     3,
     0,
     1,
-    3,
+    5,
     2,
-    4,
-    3,
+    8,
+    5,
     2,
     100,
     100,
@@ -113,7 +113,6 @@ trajectory, scores = my_env.run(steps)
 print(scores)
 
 trajectory, sizes = my_env.get_trajectory_sizes()
-
 
 my_vis = Vis(trajectory[:, 0], sizes[0], steps, my_env.ground)
 
