@@ -39,7 +39,13 @@ def absolute_parameters_fitness(ga_instance, chromosome):
         abs(bike.wheel_2_radius) + abs(bike.wheel_2_mass) + 
         abs(bike.wheel_2_torque) +
         abs(bike.body_1_x) + abs(bike.body_1_y) + abs(bike.body_1_mass) +
-        abs(bike.body_2_x) + abs(bike.body_2_y) + abs(bike.body_2_mass)
+        abs(bike.body_2_x) + abs(bike.body_2_y) + abs(bike.body_2_mass) +
+        abs(bike.k_spring_w1_w2) + abs(bike.k_spring_w1_b1) +
+        abs(bike.k_spring_w1_b2) + abs(bike.k_spring_w2_b1) +
+        abs(bike.k_spring_w2_b2) + abs(bike.k_spring_b1_b2) +
+        abs(bike.loss_spring_w1_w2) + abs(bike.loss_spring_w1_b1) +
+        abs(bike.loss_spring_w1_b2) + abs(bike.loss_spring_w2_b1) +
+        abs(bike.loss_spring_w2_b2) + abs(bike.loss_spring_b1_b2)
     )
     
     # The fitness is the negative of the sum (so minimizing absolute values maximizes fitness)
