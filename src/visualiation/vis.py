@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 """
 Visualization module for animating the trajectory of a bike simulation.
