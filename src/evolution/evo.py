@@ -1,5 +1,6 @@
 import numpy as np
 import random
+from env.env import env
 
 class GeneticAlgorithm():
     """
@@ -145,16 +146,18 @@ class GeneticAlgorithm():
             deci.append(decimal / scale)
         return deci
  
+
     def fit(self):
         """
         Runs the Genetic Algorithm, including selection, crossover, and mutation, 
         until the number of generations is reached or the tolerance is met.
         """
 
+
         print("Initial population:")
         print(self.population)
         
-        self.calculateFitness()
+        self.calculateFitness(my_env)
         print("Initial fitness:")
         print(self.populationFitness)
 
@@ -180,7 +183,7 @@ class GeneticAlgorithm():
             self.population[np.argmin(self.populationFitness)] = self.elites[i].copy()
 
             self.calculateStatistics()
-            self.calculateFitness()
+            self.calculateFitness(my_env)
             print("Generation Fitness:")
             print(self.populationFitness)
 
@@ -189,12 +192,16 @@ class GeneticAlgorithm():
                 self.elites[i] = self.population[np.argmax(self.populationFitness)]
                 break
 
-    def calculateFitness(self):
-        """
-        Computes the fitness of each individual in the population using the defined fitness function.
-        """
-        for i in range(self.populationSize):
-            self.populationFitness[i] = self.fitnessFunction(self, self.population[i])
+
+    def calculateFitness(self, my_env):
+        steps = 20
+
+        trajectory, scores = my_env.run(steps)
+        self.populationFitness = scores
+
+        print("Trajectory:", trajectory)
+        print("Scores:", scores)
+
 
     def selection(self):
         """
