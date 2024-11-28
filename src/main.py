@@ -4,16 +4,17 @@ import numpy as np
 from pprint import pprint
 from visualiation.vis import Vis
 from evolution.evo import GeneticAlgorithm
+import random
 
 my_env = env(-9.8)
 
     # Genetic Algorithm parameters
-population_size = 10
+population_size = 5
 num_bits_per_individual = 28  # Adjust based on your scale and precision needs
-num_generations = 100
+num_generations = 10
 crossover_probability = 0.7
 mutation_probability = 0.05
-num_parents = 4
+num_parents = 2
 tolerance = 0.01
 
 # Create Genetic Algorithm instance
@@ -34,39 +35,19 @@ decoded_params =  np.zeros(28)
 # Create some dummy bikes (this step might be different depending on your actual Bike class implementation)
 for _ in range(population_size):
     bike = Bike(
-    1,
-    1,
-    2,
-    3,
-    1,
-    4,
-    1,
-    2,
-    3,
-    0,
-    1,
-    3,
-    2,
-    4,
-    3,
-    2,
-    100,
-    100,
-    100,
-    100,
-    100,
-    100,
-    10,
-    10,
-    10,
-    10,
-    10,
-    10
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10)
     )
     ga.bikes.append(bike)
     ga.bike2array(len(ga.bikes) - 1, bike)
-
-
 
 my_env.set_bikes(ga.bikes)
 
