@@ -128,15 +128,3 @@ def test_geneticAlgorithm():
     assert (best_params[-1] < 0.01)
 
 
-
-    # plt.figure(figsize=(10, 6))
-    # plt.plot(max_values, label='Max Fitness')
-    # plt.plot(avg_values, label='Average Fitness')
-    # plt.plot(min_values, label='Min Fitness')
-    # plt.title('Fitness Progression')
-    # plt.xlabel('Generation')
-    # plt.ylabel('Fitness')
-    # plt.legend()
-    # plt.show()
-
-

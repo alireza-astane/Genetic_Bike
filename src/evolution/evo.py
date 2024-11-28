@@ -1,6 +1,5 @@
 import numpy as np
 import random
-from env.env import env
 
 class GeneticAlgorithm():
     """
@@ -157,7 +156,7 @@ class GeneticAlgorithm():
         print("Initial population:")
         print(self.population)
         
-        self.calculateFitness(my_env)
+        self.calculateFitness()
         print("Initial fitness:")
         print(self.populationFitness)
 
@@ -183,7 +182,7 @@ class GeneticAlgorithm():
             self.population[np.argmin(self.populationFitness)] = self.elites[i].copy()
 
             self.calculateStatistics()
-            self.calculateFitness(my_env)
+            self.calculateFitness()
             print("Generation Fitness:")
             print(self.populationFitness)
 
@@ -193,14 +192,10 @@ class GeneticAlgorithm():
                 break
 
 
-    def calculateFitness(self, my_env):
-        steps = 20
+    def calculateFitness(self):
+        for i in range(self.populationSize):
+            self.populationFitness[i] = self.fitnessFunction(self, self.population[i])
 
-        trajectory, scores = my_env.run(steps)
-        self.populationFitness = scores
-
-        print("Trajectory:", trajectory)
-        print("Scores:", scores)
 
 
     def selection(self):
