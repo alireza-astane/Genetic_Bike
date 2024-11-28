@@ -39,22 +39,78 @@ my_bike_1 = Bike(
     10,
 )
 
-# my_bike_2 = Bike(
-#     1, 1, 2, 3, 1, 4, 1, 2, 3, 0, 1, 3, 2, 4, 3, 2, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1
-# )
+my_bike_2 = Bike(
+    1,
+    1,
+    2,
+    3,
+    1,
+    4,
+    1,
+    2,
+    3,
+    0,
+    1,
+    3,
+    2,
+    4,
+    3,
+    2,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+)
 
-# my_bike_3 = Bike(
-#     1, 1, 2, 3, 1, 4, 1, 2, 3, 0, 1, 3, 2, 4, 3, 2, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1
-# )
+my_bike_3 = Bike(
+    1,
+    1,
+    2,
+    3,
+    1,
+    4,
+    1,
+    2,
+    3,
+    0,
+    1,
+    3,
+    2,
+    4,
+    3,
+    2,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+)
 
 
-# my_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
+my_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
 
-my_env.set_bikes([my_bike_1])
+# my_env.set_bikes([my_bike_1])
 
-steps = 100
+steps = 20
 
-my_env.run(steps)
+trajectory, scores = my_env.run(steps)
+
+print(scores)
 
 trajectory, sizes = my_env.get_trajectory_sizes()
 
