@@ -104,37 +104,37 @@ class Vis:
         plt.plot(
             [self.trajectory[i, 0, 0], self.trajectory[i, 1, 0]],
             [self.trajectory[i, 0, 1], self.trajectory[i, 1, 1]],
-            color="tab:red",
+            color="red",
         )
 
         plt.plot(
             [self.trajectory[i, 0, 0], self.trajectory[i, 2, 0]],
             [self.trajectory[i, 0, 1], self.trajectory[i, 2, 1]],
-            color="tab:red",
+            color="red",
         )
 
         plt.plot(
             [self.trajectory[i, 0, 0], self.trajectory[i, 3, 0]],
             [self.trajectory[i, 0, 1], self.trajectory[i, 3, 1]],
-            color="tab:red",
+            color="red",
         )
 
         plt.plot(
             [self.trajectory[i, 1, 0], self.trajectory[i, 2, 0]],
             [self.trajectory[i, 1, 1], self.trajectory[i, 2, 1]],
-            color="tab:red",
+            color="red",
         )
 
         plt.plot(
             [self.trajectory[i, 1, 0], self.trajectory[i, 3, 0]],
             [self.trajectory[i, 1, 1], self.trajectory[i, 3, 1]],
-            color="tab:red",
+            color="red",
         )
 
         plt.plot(
             [self.trajectory[i, 2, 0], self.trajectory[i, 3, 0]],
             [self.trajectory[i, 2, 1], self.trajectory[i, 3, 1]],
-            color="tab:red",
+            color="red",
         )
 
         plt.plot(
@@ -144,15 +144,15 @@ class Vis:
         ball1 = plt.Circle(
             self.trajectory[i, 0],
             radius=self.radiuss[0],
-            edgecolor=("tab:blue", 0.5),
-            facecolor="none",
+            edgecolor="blue",
+            facecolor="white",
             linewidth=5,
         )
         ball2 = plt.Circle(
             self.trajectory[i, 1],
             radius=self.radiuss[1],
-            edgecolor=("tab:blue", 0.5),
-            facecolor="none",
+            edgecolor="blue",
+            facecolor="white",
             linewidth=5,
         )
         ball3 = plt.Circle(self.trajectory[i, 2], radius=0.5, color="black")
