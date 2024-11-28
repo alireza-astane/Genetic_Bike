@@ -1,39 +1,45 @@
-# what should the trajectory look like?
+# add all fields to init
+# add doc
+# add tests
+# fix evaluate
 import numpy as np
 from bike.bike import Bike
 from tqdm import tqdm
 
 
 class env:
-    def __init__(self, g=-9.8, elasticiity=0):
+    def __init__(
+        self,
+        g=-9.8,
+        elasticiity=0,
+        x_max=1000,
+        t_step=0.01,
+        starting_hight=10,
+        delta_x=0.001,
+        ground=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+        ground_derivative=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    ):
         self.elasticiity = elasticiity
         self.trajectory = []
         self.n_bikes = 0
-        self.t = 0  # t in seconds
-        self.t_step = 0.01  # t step in seconds
+        self.t = 0
+        self.t_step = t_step  # t step in seconds
         self.bikes = []
-        self.starting_positions = np.array([0, 10])  # ???
-        self.x_max = 1000
-        self.delta_x = 0.001
-        self.ground_derivative = np.array(
-            [
-                np.linspace(0, self.x_max, int(self.x_max / self.delta_x)),
-                0 * np.linspace(0, self.x_max, int(self.x_max / self.delta_x)),
-            ]
-        ).T  # ground function
-        # self.ground = np.array(
-        #     [
-        #         np.linspace(0, self.x_max, int(self.x_max / self.delta_x)),
-        #         np.linspace(0, self.x_max, int(self.x_max / self.delta_x)),
-        #     ]
-        # ).T  # ground function
-
-        self.ground = np.array(
-            [
-                np.linspace(0, self.x_max, int(self.x_max / self.delta_x)),
-                0 * np.linspace(0, self.x_max, int(self.x_max / self.delta_x)),
-            ]
-        ).T  # ground function
+        self.starting_positions = np.array([0, starting_hight])
+        self.x_max = x_max
+        self.delta_x = delta_x
+        self.ground_derivative = ground_derivative
+        self.ground = ground
         self.ms = np.zeros((self.n_bikes, 4))
         self.g = g
 
@@ -111,9 +117,22 @@ class env:
 
     def evaluate(self):
         delta_X = self.R[:, :, 0] - self.R0[:, :, 0]
-        return np.sum(delta_X * self.ms, axis=1) / np.sum(self.ms, axis=1)
+        ys = self.trajectory[:, :, 2:, 1]
+        y_ground = self.ground[
+            (self.trajectory[:, :, 2:, 0] / self.delta_x).astype(np.int64), 1
+        ]
+        mass_center_change = np.sum(delta_X * self.ms, axis=1) / np.sum(self.ms, axis=1)
+        lower = ys < y_ground
+        failed = np.any(lower, axis=(0, 2))
+        # where_failed = np.argwhere(lower)
+        # wheels_x = self.trajectory[:, :, 2:, 0]
+        # print(where_failed, where_failed.shape, wheels_x.shape)
 
-    # initalized the whole env and bikes
+        # wheels_x[where_failed[:, 0], where_failed[:, 1], where_failed[:, 2]].shape
+
+        mass_center_change[failed] = 0
+
+        return mass_center_change
 
     def run(self, n):
         self.trajectory = np.zeros((n, self.n_bikes, 4, 2))
@@ -180,7 +199,7 @@ class env:
 
     def cal_gravity_force(self):
         W = np.zeros((self.n_bikes, 4, 2))
-        W[:, :, 1] = self.ms * self.g  # shapes = (n_bikes * 4) * 2 = n_bikes * 4 * 2
+        W[:, :, 1] = self.ms * self.g
         return W
 
     def get_distance_distance_unit_vector(self, R):
@@ -198,12 +217,12 @@ class env:
 
         return distance, normalized_distances
 
-    def cal_spring_force(self, R):  ### values not tested
+    def cal_spring_force(self, R):
         d, d_hat = self.get_distance_distance_unit_vector(R)
 
-        x = d - (d_hat * self.init_lengths.reshape(-1, 4, 4, 1))  # -/+ ?
+        x = d - (d_hat * self.init_lengths.reshape(-1, 4, 4, 1))
 
-        spring_force = np.sum(-self.K.reshape(-1, 4, 4, 1) * x, axis=1)  # or axis = 1,2
+        spring_force = np.sum(-self.K.reshape(-1, 4, 4, 1) * x, axis=1)
 
         return spring_force
 
@@ -220,7 +239,7 @@ class env:
 
         return n_hat
 
-    def parallel_unit_vector(self, touch_point_x):  # poses = (n_bikes * 2  )
+    def parallel_unit_vector(self, touch_point_x):
         t_hat = np.zeros((self.n_bikes, 2, 2))
 
         f_primes = self.ground_derivative[touch_point_x][:, :, 1]
@@ -230,7 +249,7 @@ class env:
 
         return t_hat
 
-    def get_connection_info(self, pos):  # pos = ( n_bikes * 2 * 2 )  for wheels
+    def get_connection_info(self, pos):
 
         tiled_ground = np.tile(self.ground, (self.n_bikes, 2, 1, 1)).transpose(
             (2, 0, 1, 3)
@@ -245,8 +264,6 @@ class env:
         is_touched = min_distacne - self.Radiuses < 1e-5
 
         return min_distacne, closest_point_x, is_touched
-
-    # checked functions above
 
     def calculate_forces(self, R, V, t):
         force = np.zeros((self.n_bikes, 4, 2))
