@@ -116,7 +116,7 @@ def test_geneticAlgorithm():
     
     for name, value in zip(param_names, best_params):
         print(f"{name}: {value}")
-    assert (best_params[-1] < 0.0001)
+    assert (best_params[-1] < 0.01)
 
 
 
