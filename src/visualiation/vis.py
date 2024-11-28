@@ -22,58 +22,63 @@ class Vis:
 
     def animate(self, i):
         plt.cla()
-        self.axes.set_xlim(-20, 20)
-        self.axes.set_ylim(-20, 20)
+        plt.gca().set_aspect('equal')
+        plt.xlabel("x [m]")
+        plt.ylabel("h [m]")
 
-        plt.plot(self.ground[:, 0], self.ground[:, 1], color="black")
-
-        ball1 = plt.Circle(
-            self.trajectory[i, 0], radius=self.radiuss[0], color="yellow"
-        )
-        ball2 = plt.Circle(self.trajectory[i, 1], radius=self.radiuss[1], color="blue")
-        ball3 = plt.Circle(self.trajectory[i, 2], radius=0, color="green")
-        ball4 = plt.Circle(self.trajectory[i, 3], radius=0, color="red")
-
-        self.axes.add_patch(ball1)
-        self.axes.add_patch(ball2)
-        self.axes.add_patch(ball3)
-        self.axes.add_patch(ball4)
+        self.axes.set_xlim(-2, 20)
+        self.axes.set_ylim(-5, 20)
 
         plt.plot(
             [self.trajectory[i, 0, 0], self.trajectory[i, 1, 0]],
             [self.trajectory[i, 0, 1], self.trajectory[i, 1, 1]],
-            color="black",
+            color="tab:red",
         )
 
         plt.plot(
             [self.trajectory[i, 0, 0], self.trajectory[i, 2, 0]],
             [self.trajectory[i, 0, 1], self.trajectory[i, 2, 1]],
-            color="black",
+            color="tab:red",
         )
 
         plt.plot(
             [self.trajectory[i, 0, 0], self.trajectory[i, 3, 0]],
             [self.trajectory[i, 0, 1], self.trajectory[i, 3, 1]],
-            color="black",
+            color="tab:red",
         )
 
         plt.plot(
             [self.trajectory[i, 1, 0], self.trajectory[i, 2, 0]],
             [self.trajectory[i, 1, 1], self.trajectory[i, 2, 1]],
-            color="black",
+            color="tab:red",
         )
 
         plt.plot(
             [self.trajectory[i, 1, 0], self.trajectory[i, 3, 0]],
             [self.trajectory[i, 1, 1], self.trajectory[i, 3, 1]],
-            color="black",
+            color="tab:red",
         )
 
         plt.plot(
             [self.trajectory[i, 2, 0], self.trajectory[i, 3, 0]],
             [self.trajectory[i, 2, 1], self.trajectory[i, 3, 1]],
-            color="black",
+            color="tab:red",
         )
+
+        plt.plot(self.ground[:, 0], self.ground[:, 1], 
+            color="black", alpha=0.5, linewidth=10)
+
+        ball1 = plt.Circle(self.trajectory[i, 0], radius=self.radiuss[0], 
+            edgecolor=("tab:blue", 0.5), facecolor='none', linewidth=5)
+        ball2 = plt.Circle(self.trajectory[i, 1], radius=self.radiuss[1], 
+            edgecolor=("tab:blue", 0.5), facecolor='none', linewidth=5)
+        ball3 = plt.Circle(self.trajectory[i, 2], radius=0.5, color="black")
+        ball4 = plt.Circle(self.trajectory[i, 3], radius=0.5, color="black")
+
+        self.axes.add_patch(ball1)
+        self.axes.add_patch(ball2)
+        self.axes.add_patch(ball3)
+        self.axes.add_patch(ball4)
 
         return (
             ball1,

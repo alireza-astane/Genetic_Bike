@@ -19,6 +19,39 @@ mutation_probability = 0.05
 num_parents = 2
 tolerance = 0.01
 
+<<<<<<< HEAD
+=======
+my_bike_1 = Bike(
+    1,
+    1,
+    2,
+    3,
+    1,
+    8,
+    1,
+    2,
+    3,
+    0,
+    1,
+    5,
+    2,
+    8,
+    5,
+    2,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+)
+>>>>>>> main
 
 
 # Create Genetic Algorithm instance
@@ -123,8 +156,11 @@ print(scores)
 
 trajectory, sizes = my_env.get_trajectory_sizes()
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> main
 my_vis = Vis(trajectory[:, 0], sizes[0], steps, my_env.ground)
 
 my_vis.run()
