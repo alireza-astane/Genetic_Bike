@@ -1,7 +1,20 @@
+"""
+Module implementing a Genetic Algorithm for optimization.
+This module provides the `GeneticAlgorithm` class, which implements a genetic algorithm for solving optimization problems. The genetic algorithm evolves a population of binary-encoded individuals over multiple generations using selection, crossover, and mutation operators to optimize a given fitness function.
+Classes
+GeneticAlgorithm
+    Class that implements the genetic algorithm for optimization.
+Notes
+-----
+The genetic algorithm is a population-based search algorithm inspired by the principles of natural selection and genetics. It is particularly useful for solving complex optimization problems where the search space is large and traditional gradient-based methods are not applicable.
+The `GeneticAlgorithm` class in this module allows customization of various parameters such as population size, number of generations, crossover probability, mutation probability, and selection strategy. It also supports user-defined fitness functions to evaluate the fitness of individuals in the population.
+"""
+
 import numpy as np
 import random
 
-class GeneticAlgorithm():
+
+class GeneticAlgorithm:
     """
     Implements a Genetic Algorithm for optimization.
 
@@ -25,7 +38,7 @@ class GeneticAlgorithm():
         Tolerance value to stop the algorithm if reached.
     numCompetitors : int, optional
         Number of competitors in the tournament selection (default is 2).
-    
+
     Attributes
     ----------
     population : ndarray
@@ -45,7 +58,19 @@ class GeneticAlgorithm():
     minValues : list
         Minimum fitness values per generation.
     """
-    def __init__(self, populationSize, numBitsPerIndividual, numGenerations, crossoverProbability, mutationProbability, numParents, fitnessFunction, tolerance, numCompetitors=2):
+
+    def __init__(
+        self,
+        populationSize,
+        numBitsPerIndividual,
+        numGenerations,
+        crossoverProbability,
+        mutationProbability,
+        numParents,
+        fitnessFunction,
+        tolerance,
+        numCompetitors=2,
+    ):
 
         np.random.seed(42)
         random.seed(42)
@@ -57,12 +82,14 @@ class GeneticAlgorithm():
         self.mutationProbability = mutationProbability
         self.numGenerations = numGenerations
         self.numCompetitors = numCompetitors
-        
-        self.population = np.random.randint(0, 2, (self.populationSize, self.numBitsPerIndividual))
+
+        self.population = np.random.randint(
+            0, 2, (self.populationSize, self.numBitsPerIndividual)
+        )
         self.populationFitness = np.zeros(self.populationSize)
         self.parents = np.zeros((self.numParents, self.numBitsPerIndividual))
         self.bikes = []
-        
+
         self.fitnessFunction = fitnessFunction
 
         self.elites = np.zeros((self.numGenerations, self.numBitsPerIndividual))
@@ -71,7 +98,6 @@ class GeneticAlgorithm():
         self.minValues = []
 
         self.tolerance = tolerance
-        
 
     def bike2array(self, i, bike):
         """
@@ -85,25 +111,25 @@ class GeneticAlgorithm():
             `Bike` object with physical properties to convert.
         """
         chrom = []
-        scale = 10  
-        nbit=self.numBitsPerIndividual
-        
+        scale = 10
+        nbit = self.numBitsPerIndividual
+
         chrom.append(np.binary_repr(int(self.bikes[i].wheel_1_x * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].wheel_1_y * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].wheel_1_radius * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].wheel_1_mass * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].wheel_1_torque * scale), nbit))
-        
+
         chrom.append(np.binary_repr(int(self.bikes[i].wheel_2_x * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].wheel_2_y * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].wheel_2_radius * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].wheel_2_mass * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].wheel_2_torque * scale), nbit))
-        
+
         chrom.append(np.binary_repr(int(self.bikes[i].body_1_x * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].body_1_y * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].body_1_mass * scale), nbit))
-        
+
         chrom.append(np.binary_repr(int(self.bikes[i].body_2_x * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].body_2_y * scale), nbit))
         chrom.append(np.binary_repr(int(self.bikes[i].body_2_mass * scale), nbit))
@@ -144,25 +170,23 @@ class GeneticAlgorithm():
             decimal = int(str(binary), 2)
             deci.append(decimal / scale)
         return deci
- 
 
     def fit(self):
         """
-        Runs the Genetic Algorithm, including selection, crossover, and mutation, 
+        Runs the Genetic Algorithm, including selection, crossover, and mutation,
         until the number of generations is reached or the tolerance is met.
         """
 
-
         print("Initial population:")
         print(self.population)
-        
+
         self.calculateFitness()
         print("Initial fitness:")
         print(self.populationFitness)
 
         for i in range(self.numGenerations):
             print(f"\nGeneration {i + 1}:")
-            
+
             self.elites[i] = self.population[np.argmax(self.populationFitness)].copy()
             print("Elites:")
             print(self.elites[i])
@@ -191,19 +215,18 @@ class GeneticAlgorithm():
                 self.elites[i] = self.population[np.argmax(self.populationFitness)]
                 break
 
-
     def calculateFitness(self):
         for i in range(self.populationSize):
             self.populationFitness[i] = self.fitnessFunction(self, self.population[i])
-
-
 
     def selection(self):
         """
         Selects parents using a tournament selection mechanism.
         """
         for i in range(self.numParents):
-            competitorIndices = np.random.randint(0, len(self.populationFitness), (self.numCompetitors, 1))
+            competitorIndices = np.random.randint(
+                0, len(self.populationFitness), (self.numCompetitors, 1)
+            )
             winnerIndex = np.argmax(self.populationFitness[competitorIndices])
             self.parents[i] = self.population[competitorIndices[winnerIndex]].copy()
 
@@ -214,15 +237,15 @@ class GeneticAlgorithm():
         for i in range(self.populationSize // 2):
             parent1 = self.parents[random.randint(0, len(self.parents)) - 1].copy()
             parent2 = self.parents[random.randint(0, len(self.parents)) - 1].copy()
-                        
+
             if random.random() < self.crossoverProbability:
                 offspring = self._cross(parent1, parent2)
             else:
                 offspring = (parent1, parent2)
-            
+
             self.population[2 * i] = offspring[0]
             self.population[2 * i + 1] = offspring[1]
-    
+
     def _cross(self, parent1, parent2):
         """
         Performs a single-point crossover between two parents.
@@ -240,8 +263,12 @@ class GeneticAlgorithm():
             Two offspring resulting from the crossover.
         """
         crossoverPoint = random.randint(0, self.numBitsPerIndividual)
-        offspring1 = np.concatenate((parent1[:crossoverPoint], parent2[crossoverPoint:]), axis=None)
-        offspring2 = np.concatenate((parent2[:crossoverPoint], parent1[crossoverPoint:]), axis=None)
+        offspring1 = np.concatenate(
+            (parent1[:crossoverPoint], parent2[crossoverPoint:]), axis=None
+        )
+        offspring2 = np.concatenate(
+            (parent2[:crossoverPoint], parent1[crossoverPoint:]), axis=None
+        )
         return (offspring1, offspring2)
 
     def mutation(self):
@@ -251,8 +278,10 @@ class GeneticAlgorithm():
         for i in range(self.populationSize):
             for j in range(self.numBitsPerIndividual):
                 if random.random() < self.mutationProbability:
-                    self.population[i][j] = self.population[i][j] ^ 1  # XOR operator: 1^1 = 0, 0^1 = 1
-    
+                    self.population[i][j] = (
+                        self.population[i][j] ^ 1
+                    )  # XOR operator: 1^1 = 0, 0^1 = 1
+
     def getElites(self):
         """
         Retrieves the stored elite individuals.
@@ -266,7 +295,7 @@ class GeneticAlgorithm():
 
     def calculateStatistics(self):
         """
-        Computes statistics of the population, including maximum, minimum, 
+        Computes statistics of the population, including maximum, minimum,
         and average fitness values.
         """
         self.maxValues.append(max(self.populationFitness))
