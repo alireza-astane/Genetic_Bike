@@ -1,9 +1,12 @@
 import numpy as np
 import random
 
-
 class GeneticAlgorithm():
     def __init__(self, populationSize, numBitsPerIndividual, numGenerations, crossoverProbability, mutationProbability, numParents, fitnessFunction, tolerance, numCompetitors=2):
+
+        np.random.seed(42)
+        random.seed(42)
+
 
         self.numBitsPerIndividual = numBitsPerIndividual
         self.numParents = numParents
