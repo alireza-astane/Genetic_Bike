@@ -3,6 +3,86 @@ import numpy as np
 
 class Bike:
 
+    """
+    Generate any bike with 
+    two wheels, two body nodes, all connected by
+    Hookean spring with a damping factor. Here:
+    w1 ~ wheel_1
+    w2 ~ wheel_2
+    b1 ~ body_1
+    b2 ~ body_2
+
+    Parameters
+    ----------
+    wheel_1_x : float
+        x coordinate of the first wheel.
+    wheel_1_y : float
+        y coordinate of the first wheel.
+    wheel_1_radius: float
+        first wheel radius
+    wheel_1_mass: float
+        first wheel mass
+    wheel_1_torque: float
+        first wheel torque
+    
+    wheel_2_x : float
+        x coordinate of the first wheel.
+    wheel_2_y : float
+        y coordinate of the first wheel.
+    wheel_2_radius: float
+        first wheel radius
+    wheel_2_mass: float
+        first wheel mass
+    wheel_2_torque: float
+        first wheel torque
+
+    body_1_x: float
+        x coordinate of the first body node
+    body_1_y: float
+        y coordinate of the first body node
+    body_1_mass: float
+        mass of the first body node
+
+    body_2_x: float
+        x coordinate of the first body node
+    body_2_y: float
+        y coordinate of the first body node
+    body_2_mass: float
+        mass of the first body node
+    
+    k_spring_w1_w2: float
+        spring coefficient of the spring 1, connecting wheel 1 and wheel 2
+    k_spring_w1_b1: float
+        spring coefficient of the spring 2, connecting wheel 1 and body 1
+    k_spring_w1_b2: float
+        spring coefficient of the spring 3, connecting wheel 1 and body 2
+    k_spring_w2_b1: float
+        spring coefficient of the spring 4, connecting wheel 2 and body 1
+    k_spring_w2_b2: float
+        spring coefficient of the spring 5, connecting wheel 2 and body 2
+    k_spring_b1_b2: float
+        spring coefficient of the spring 6, connecting body 1 and body 2
+
+    loss_spring_w1_w2: float
+        loss coefficient of the spring 1, connecting wheel 1 and wheel 2
+    loss_spring_w1_b1: float
+        loss coefficient of the spring 2, connecting wheel 1 and body 1
+    loss_spring_w1_b2: float
+        loss coefficient of the spring 3, connecting wheel 1 and body 2
+    loss_spring_w2_b1: float
+        loss coefficient of the spring 4, connecting wheel 2 and body 1
+    loss_spring_w2_b2: float
+        loss coefficient of the spring 5, connecting wheel 2 and body 2
+    loss_spring_b1_b2: float
+        loss coefficient of the spring 6, connecting body 1 and body 2
+
+    Returns
+    -------
+    class
+        a bike as a class
+
+    """
+
     def __init__(self, 
         wheel_1_x, wheel_1_y, wheel_1_radius, wheel_1_mass, wheel_1_torque,
         wheel_2_x, wheel_2_y, wheel_2_radius, wheel_2_mass, wheel_2_torque,
@@ -51,6 +131,16 @@ class Bike:
 
 
     def get_coordinates(self):
+        
+        """
+        Get the coordinates of wheel 1, wheel 2, body 1, body 2
+
+        Return
+        ----------
+            coordinates : array, shape = (6, 2)
+
+        """
+
         nodes_coordinates = np.array([
             [self.wheel_1_x, self.wheel_1_y],
             [self.wheel_2_x, self.wheel_2_y],
@@ -61,6 +151,16 @@ class Bike:
         return nodes_coordinates
 
     def get_springs_k(self):
+
+        """
+        Get the spring coefficients.
+
+        Return
+        ----------
+            spring coeffcients : array, shape = (4, 4)
+
+        """
+
         springs_k = np.array([        
             [0, self.k_spring_w1_w2, self.k_spring_w1_b1, self.k_spring_w1_b2],
             [self.k_spring_w1_w2, 0, self.k_spring_w2_b1, self.k_spring_w2_b2],
@@ -70,6 +170,16 @@ class Bike:
         return springs_k
 
     def get_springs_loss(self):
+
+        """
+        Get the loss coefficients.
+
+        Return
+        ----------
+            loss coeffcients : array, shape = (4, 4)
+
+        """
+
         springs_loss = np.array([
             [0, self.loss_spring_w1_w2, self.loss_spring_w1_b1, self.loss_spring_w1_b2],
             [self.loss_spring_w1_w2, 0, self.loss_spring_w2_b1, self.loss_spring_w2_b2],
@@ -80,13 +190,38 @@ class Bike:
 
     def get_torques(self):
 
+        """
+        Get the torque values of the wheels
+
+        Return
+        ----------
+            torques: list
+        """
+
         return [self.wheel_1_torque, self.wheel_1_torque]
 
     def get_wheels_radius(self):
 
+        """
+        Get the radii of the wheels
+
+        Return
+        ----------
+            radius: list
+        """
+
         return [self.wheel_1_radius, self.wheel_2_radius]
 
     def spring_length(self, node_i, node_j):
+
+        """
+        Get the spring length between node i and j.
+
+        Return
+        ----------
+            spring length : float
+
+        """
         
         nodes_coordinates = np.array([
             [self.wheel_1_x, self.wheel_1_y],
@@ -109,6 +244,16 @@ class Bike:
         return my_spring_length
 
     def get_springs_length(self):
+
+        """
+        Get all springs' lengths.
+
+        Return
+        ----------
+            spring length : array, shape = (4, 4)
+
+        """
+
         springs_length = np.zeros((4,4))
         for i in range(4):
             for j in range(4):
@@ -121,5 +266,14 @@ class Bike:
         return springs_length
 
     def get_masses(self):
+
+        """
+        Get all springs' masses.
+
+        Return
+        ----------
+            spring mass : list
+
+        """
 
         return [self.wheel_1_mass, self.wheel_2_mass, self.body_1_mass, self.body_2_mass]
