@@ -20,7 +20,6 @@ num_parents = 2
 tolerance = 0.01
 
 
-
 # Create Genetic Algorithm instance
 ga = GeneticAlgorithm(
     populationSize=population_size,
@@ -30,43 +29,41 @@ ga = GeneticAlgorithm(
     mutationProbability=mutation_probability,
     numParents=num_parents,
     fitnessFunction=None,
-    tolerance=tolerance
+    tolerance=tolerance,
 )
 
 
 # Create some dummy bikes (this step might be different depending on your actual Bike class implementation)
 for _ in range(population_size):
     bike = Bike(
-
-    1   + 0.2 * np.random.rand(),
-    1   + 0.2 * np.random.rand(),
-    2   + 0.2 * np.random.rand(),
-    3   + 0.2 * np.random.rand(),
-    1   + 0.2 * np.random.rand(),
-    4   + 0.2 * np.random.rand(),
-    1   + 0.2 * np.random.rand(),
-    2   + 0.2 * np.random.rand(),
-    3   + 0.2 * np.random.rand(),
-    0   + 0.2 * np.random.rand(),
-    1   + 0.2 * np.random.rand(),
-    3,
-    2   + 0.2 * np.random.rand(),
-    4   + 0.2 * np.random.rand(),
-    3,
-    2   + 0.2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    10  + 1 * np.random.rand(),
-    10  + 1 * np.random.rand(),
-    10  + 1 * np.random.rand(),
-    10  + 1 * np.random.rand(),
-    10  + 1 * np.random.rand(),
-    10  + 1 * np.random.rand(),
-
+        1 + 0.2 * np.random.rand(),
+        1 + 0.2 * np.random.rand(),
+        2 + 0.2 * np.random.rand(),
+        3 + 0.2 * np.random.rand(),
+        1 + 0.2 * np.random.rand(),
+        4 + 0.2 * np.random.rand(),
+        1 + 0.2 * np.random.rand(),
+        2 + 0.2 * np.random.rand(),
+        3 + 0.2 * np.random.rand(),
+        0 + 0.2 * np.random.rand(),
+        1 + 0.2 * np.random.rand(),
+        3,
+        2,
+        4,
+        3,
+        2 + 0.2 * np.random.rand(),
+        100 + 2 * np.random.rand(),
+        100 + 2 * np.random.rand(),
+        100 + 2 * np.random.rand(),
+        100 + 2 * np.random.rand(),
+        100 + 2 * np.random.rand(),
+        100 + 2 * np.random.rand(),
+        10 + 1 * np.random.rand(),
+        10 + 1 * np.random.rand(),
+        10 + 1 * np.random.rand(),
+        10 + 1 * np.random.rand(),
+        10 + 1 * np.random.rand(),
+        10 + 1 * np.random.rand(),
     )
     ga.bikes.append(bike)
     ga.bike2array(len(ga.bikes) - 1, bike)
@@ -86,7 +83,7 @@ print(ga.populationFitness)
 
 for i in range(ga.numGenerations):
     print(f"\nGeneration {i + 1}:")
-    
+
     ga.elites[i] = ga.population[np.argmax(ga.populationFitness)].copy()
     print("Elites:")
     print(ga.elites[i])
@@ -106,10 +103,10 @@ for i in range(ga.numGenerations):
     ga.population[np.argmin(ga.populationFitness)] = ga.elites[i].copy()
 
     ga.calculateStatistics()
-    
+
     trajectory, scores = my_env.run(steps)
     ga.populationFitness = scores
-    
+
     print("Generation Fitness:")
     print(ga.populationFitness)
 
@@ -117,7 +114,6 @@ for i in range(ga.numGenerations):
         print("Last iteration", i)
         ga.elites[i] = ga.population[np.argmax(ga.populationFitness)]
         break
-
 
 
 print(scores)

@@ -1,782 +1,996 @@
-# from env.env import *
-# import unittest
-
-# assertions = unittest.TestCase("__init__")
-
-
-# def test_get_distance_unit_vector():
-#     test_env = env(9.8)
-#     R = np.array([[[1, 1], [2, 2], [3, 3], [4, 4]], [[1, 1], [2, 2], [3, 3], [4, 4]]])
-
-#     normalized_distances = test_env.get_distance_unit_vector(R)
-#     assert np.all(
-#         normalized_distances
-#         - np.array(
-#             [
-#                 [
-#                     [
-#                         [0.0, 0.0],
-#                         [0.70710678, 0.70710678],
-#                         [0.70710678, 0.70710678],
-#                         [0.70710678, 0.70710678],
-#                     ],
-#                     [
-#                         [-0.70710678, -0.70710678],
-#                         [0.0, 0.0],
-#                         [0.70710678, 0.70710678],
-#                         [0.70710678, 0.70710678],
-#                     ],
-#                     [
-#                         [-0.70710678, -0.70710678],
-#                         [-0.70710678, -0.70710678],
-#                         [0.0, 0.0],
-#                         [0.70710678, 0.70710678],
-#                     ],
-#                     [
-#                         [-0.70710678, -0.70710678],
-#                         [-0.70710678, -0.70710678],
-#                         [-0.70710678, -0.70710678],
-#                         [0.0, 0.0],
-#                     ],
-#                 ],
-#                 [
-#                     [
-#                         [0.0, 0.0],
-#                         [0.70710678, 0.70710678],
-#                         [0.70710678, 0.70710678],
-#                         [0.70710678, 0.70710678],
-#                     ],
-#                     [
-#                         [-0.70710678, -0.70710678],
-#                         [0.0, 0.0],
-#                         [0.70710678, 0.70710678],
-#                         [0.70710678, 0.70710678],
-#                     ],
-#                     [
-#                         [-0.70710678, -0.70710678],
-#                         [-0.70710678, -0.70710678],
-#                         [0.0, 0.0],
-#                         [0.70710678, 0.70710678],
-#                     ],
-#                     [
-#                         [-0.70710678, -0.70710678],
-#                         [-0.70710678, -0.70710678],
-#                         [-0.70710678, -0.70710678],
-#                         [0.0, 0.0],
-#                     ],
-#                 ],
-#             ]
-#         )
-#         < 1e-5
-#     )
+from src.env.env import *
+import numpy as np
+from src.bike.bike import Bike
 
 
-# def test_calculate_distance_from_ground():  ###? bikes ?
-#     test_env = env(9.8)
-#     pos = np.array([[1, 1], [2, 4], [3, 9]])
-#     distances, touch_index = test_env.calculate_distance_from_ground(pos)
-#     assert np.all(distances - np.array([0, np.sqrt(2), 3 * np.sqrt(2)]) < 1e-5)
-
-#     assert np.all(touch_index == np.array([1000, 3000, 6000]))
-
-
-# def test_evalute():
-#     test_env = env(9.8)
-#     test_env.R = np.array(
-#         [[[1, 1], [2, 2], [3, 3], [4, 4]], [[1, 1], [2, 2], [3, 3], [4, 4]]]
-#     )
-#     test_env.R0 = np.array(
-#         [[[1, 1], [2, 2], [3, 3], [4, 4]], [[1, 1], [2, 2], [3, 3], [4, 4]]]
-#     )
-#     assertions.assertAlmostEqual(test_env.evaluate(), np.zeros((2, 2)))
-
-
-# def test_get_K():
-#     my_env = env(9.8)
-
-#     my_bike_1 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_2 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_3 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
-
-#     assert np.all(
-#         my_env.get_K()
-#         == np.array(
-#             [
-#                 [[1.0, 11.0], [4.0, 11.0], [1.0, 13.0], [4.0, 13.0]],
-#                 [[1.0, 11.0], [4.0, 11.0], [1.0, 13.0], [4.0, 13.0]],
-#                 [[1.0, 11.0], [4.0, 11.0], [1.0, 13.0], [4.0, 13.0]],
-#             ]
-#         )
-#     )
+def test_env_init():
+    test_env = env(
+        g=-9.8,
+        elasticiity=0,
+        x_max=1000,
+        t_step=0.01,
+        starting_hight=10,
+        delta_x=0.001,
+        ground=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+        ground_derivative=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    )
+    assert test_env.g == -9.8
+    assert test_env.elasticiity == 0
+    assert test_env.x_max == 1000
+    assert test_env.t_step == 0.01
+    assert test_env.starting_positions[1] == 10
+    assert test_env.starting_positions[0] == 0
+    assert test_env.delta_x == 0.001
+    np.testing.assert_array_equal(
+        test_env.ground,
+        np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    )
+    np.testing.assert_array_equal(
+        test_env.ground_derivative,
+        np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    )
 
 
-# def test_get_R():
-#     my_env = env(9.8)
+def test_set_bikes():
+    test_env = env(
+        g=-9.8,
+        elasticiity=0,
+        x_max=1000,
+        t_step=0.01,
+        starting_hight=10,
+        delta_x=0.001,
+        ground=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+        ground_derivative=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    )
+    my_bike_1 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_2 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_3 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
 
-#     my_bike_1 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_2 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_3 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
-
-#     assert np.all(
-#         my_env.get_R()
-#         == np.array(
-#             [
-#                 [[1.0, 11.0], [4.0, 11.0], [1.0, 13.0], [4.0, 13.0]],
-#                 [[1.0, 11.0], [4.0, 11.0], [1.0, 13.0], [4.0, 13.0]],
-#                 [[1.0, 11.0], [4.0, 11.0], [1.0, 13.0], [4.0, 13.0]],
-#             ]
-#         )
-#     )
-
-
-# def test_get_ms():
-#     my_env = env(9.8)
-
-#     my_bike_1 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_2 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_3 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
-
-#     assert np.all(
-#         my_env.get_ms()
-#         == np.array([[3.0, 3.0, 2.0, 2.0], [3.0, 3.0, 2.0, 2.0], [3.0, 3.0, 2.0, 2.0]])
-#     )
+    test_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
+    assert test_env.n_bikes == 3
+    assert test_env.bikes[0] == my_bike_1
+    assert test_env.bikes[1] == my_bike_2
+    assert test_env.bikes[2] == my_bike_3
 
 
-# def test_get_B():
-#     my_env = env(9.8)
-
-#     my_bike_1 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_2 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_3 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
-
-#     assert np.all(
-#         my_env.get_B()
-#         == np.array(
-#             [
-#                 [
-#                     [0.0, 1.0, 1.0, 1.0],
-#                     [1.0, 0.0, 1.0, 1.0],
-#                     [1.0, 1.0, 0.0, 1.0],
-#                     [1.0, 1.0, 1.0, 0.0],
-#                 ],
-#                 [
-#                     [0.0, 1.0, 1.0, 1.0],
-#                     [1.0, 0.0, 1.0, 1.0],
-#                     [1.0, 1.0, 0.0, 1.0],
-#                     [1.0, 1.0, 1.0, 0.0],
-#                 ],
-#                 [
-#                     [0.0, 1.0, 1.0, 1.0],
-#                     [1.0, 0.0, 1.0, 1.0],
-#                     [1.0, 1.0, 0.0, 1.0],
-#                     [1.0, 1.0, 1.0, 0.0],
-#                 ],
-#             ]
-#         )
-#     )
+def test_get_R():
+    test_env = env(
+        g=-9.8,
+        elasticiity=0,
+        x_max=1000,
+        t_step=0.01,
+        starting_hight=10,
+        delta_x=0.001,
+        ground=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+        ground_derivative=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    )
+    my_bike_1 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_2 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_3 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    test_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
+    R = test_env.get_R()
+    assert R is not None
+    assert len(R) == 3
 
 
-# def test_get_torks():
-#     my_env = env(9.8)
-
-#     my_bike_1 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_2 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_3 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
-
-#     assert np.all(
-#         my_env.get_torks()
-#         == np.array([[1.0, 1.0, 0.0, 0.0], [1.0, 1.0, 0.0, 0.0], [1.0, 1.0, 0.0, 0.0]])
-#     )
-
-
-# def test_get_init_lenghs():
-#     my_env = env(9.8)
-
-#     my_bike_1 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_2 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_bike_3 = Bike(
-#         1,
-#         1,
-#         2,
-#         3,
-#         1,
-#         4,
-#         1,
-#         2,
-#         3,
-#         0,
-#         1,
-#         3,
-#         2,
-#         4,
-#         3,
-#         2,
-#         3,
-#         2,
-#         2,
-#         2,
-#         2,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#         1,
-#     )
-
-#     my_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
-
-#     assert np.all(
-#         my_env.get_init_lenghs()
-#         == np.array(
-#             [
-#                 [
-#                     [0.0, 3.0, 2.0, 3.60555128],
-#                     [3.0, 0.0, 3.60555128, 2.0],
-#                     [2.0, 3.60555128, 0.0, 3.0],
-#                     [3.60555128, 2.0, 3.0, 0.0],
-#                 ],
-#                 [
-#                     [0.0, 3.0, 2.0, 3.60555128],
-#                     [3.0, 0.0, 3.60555128, 2.0],
-#                     [2.0, 3.60555128, 0.0, 3.0],
-#                     [3.60555128, 2.0, 3.0, 0.0],
-#                 ],
-#                 [
-#                     [0.0, 3.0, 2.0, 3.60555128],
-#                     [3.0, 0.0, 3.60555128, 2.0],
-#                     [2.0, 3.60555128, 0.0, 3.0],
-#                     [3.60555128, 2.0, 3.0, 0.0],
-#                 ],
-#             ]
-#         )
-#     )
+def test_get_K():
+    test_env = env(
+        g=-9.8,
+        elasticiity=0,
+        x_max=1000,
+        t_step=0.01,
+        starting_hight=10,
+        delta_x=0.001,
+        ground=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+        ground_derivative=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    )
+    my_bike_1 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_2 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_3 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    test_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
+    K = test_env.get_K()
+    assert K is not None
+    assert len(K) == 3
 
 
-# test_evalute()
+def test_get_B():
+    test_env = env(
+        g=-9.8,
+        elasticiity=0,
+        x_max=1000,
+        t_step=0.01,
+        starting_hight=10,
+        delta_x=0.001,
+        ground=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+        ground_derivative=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    )
+    my_bike_1 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_2 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_3 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    test_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
+    B = test_env.get_B()
+    assert B is not None
+    assert len(B) == 3
 
-# test_calculate_distance_from_ground()
+
+def test_get_Ms():
+    test_env = env(
+        g=-9.8,
+        elasticiity=0,
+        x_max=1000,
+        t_step=0.01,
+        starting_hight=10,
+        delta_x=0.001,
+        ground=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+        ground_derivative=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    )
+    my_bike_1 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_2 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_3 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    test_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
+    Ms = test_env.get_Ms()
+    assert Ms is not None
+    assert len(Ms) == 3
 
 
-# test_get_distance_unit_vector()
+def test_get_torks():
+    test_env = env(
+        g=-9.8,
+        elasticiity=0,
+        x_max=1000,
+        t_step=0.01,
+        starting_hight=10,
+        delta_x=0.001,
+        ground=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+        ground_derivative=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    )
+    my_bike_1 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_2 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_3 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    test_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
+    torks = test_env.get_torks()
+    assert torks is not None
+    assert len(torks) == 3
 
 
-# # test_get_init_lenghs()
+def test_get_init_lenghs():
+    test_env = env(
+        g=-9.8,
+        elasticiity=0,
+        x_max=1000,
+        t_step=0.01,
+        starting_hight=10,
+        delta_x=0.001,
+        ground=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+        ground_derivative=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    )
+    my_bike_1 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_2 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_3 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    test_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
+    init_lengths = test_env.get_init_lenghs()
+    assert init_lengths is not None
+    assert len(init_lengths) == 3
 
-# test_get_K()
+
+def test_get_Radius():
+    test_env = env(
+        g=-9.8,
+        elasticiity=0,
+        x_max=1000,
+        t_step=0.01,
+        starting_hight=10,
+        delta_x=0.001,
+        ground=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+        ground_derivative=np.array(
+            [
+                np.linspace(0, 1000, int(1000 / 0.001)),
+                0 * np.linspace(0, 1000, int(1000 / 0.001)),
+            ]
+        ).T,
+    )
+    my_bike_1 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_2 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    my_bike_3 = Bike(
+        1,
+        1,
+        2,
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        0,
+        1,
+        3,
+        2,
+        4,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    )
+    test_env.set_bikes([my_bike_1, my_bike_2, my_bike_3])
+    Radius = test_env.get_Radius()
+    assert Radius is not None
+    assert len(Radius) == 3
+
+
+def test_get_connection_info():
+    test_env = env()
+    pos = np.array([[0, 0]])
+    connection_info = test_env.get_connection_info(pos)
+    assert connection_info is not None

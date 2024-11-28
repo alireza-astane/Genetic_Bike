@@ -80,8 +80,6 @@ class env:
 
     Methods
     -------
-    set_ground(ground, derivative)
-        Sets the ground profile and its derivative.
     get_R()
         Returns the position matrix R.
     get_K()
@@ -232,20 +230,6 @@ class env:
         self.Init_lengths = None
         self.Radiuses = None
         self.trajectory = None
-
-    def set_ground(self, ground, derivative):
-        """
-        Set the ground and its derivative for the environment.
-        Parameters
-        ----------
-        ground : object
-            The ground object to be set.
-        derivative : object
-            The derivative of the ground to be set.
-        """
-
-        self.ground = ground
-        self.ground_derivative = derivative
 
     def get_R(self):
         """
@@ -453,10 +437,6 @@ class env:
         # wheels_x[where_failed[:, 0], where_failed[:, 1], where_failed[:, 2]].shape
 
         mass_center_change[failed] = 0
-
-        print("delta_X:", delta_X)
-        print("self.ms:", self.Ms)
-        print("mass_center_change:", mass_center_change)
 
         return mass_center_change
 
