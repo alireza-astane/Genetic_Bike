@@ -4,44 +4,6 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
-# def absolute_parameters_fitness(ga_instance, chromosome):
-#     """
-#     Fitness function to minimize the sum of absolute values of bike parameters.
-#     The goal is to bring all parameters as close to 0 as possible.
-    
-#     Args:
-#         ga_instance (GeneticAlgorithm): The genetic algorithm instance.
-#         chromosome (list[int]): The binary representation of an individual.
-    
-#     Returns:
-#         float: The fitness value (negative sum of absolute values of parameters).
-#     """
-#     # Convert binary chromosome to decimal values
-#     decoded_params = ga_instance.binarytobike(chromosome)
-    
-#     # Create a Bike instance from decoded parameters
-#     bike = Bike(*decoded_params)
-    
-#     # Compute the total absolute sum of all bike parameters
-#     total_abs_sum = sum(
-#         abs(getattr(bike, attr)) for attr in [
-#             "wheel_1_x", "wheel_1_y", wheel_1_radius, wheel_1_mass, wheel_1_torque,
-#         wheel_2_x, wheel_2_y, wheel_2_radius, wheel_2_mass, wheel_2_torque,
-#         body_1_x, body_1_y, body_1_mass,
-#         body_2_x, body_2_y, body_2_mass,
-#         k_spring_w1_w2, k_spring_w1_b1, k_spring_w1_b2, 
-#         k_spring_w2_b1, k_spring_w2_b2,
-#         k_spring_b1_b2,
-#         loss_spring_w1_w2, loss_spring_w1_b1, loss_spring_w1_b2, 
-#         loss_spring_w2_b1, loss_spring_w2_b2,
-#         loss_spring_b1_b2
-#         ]
-#     )
-    
-#     # The fitness is the negative of the total absolute sum
-#     return -total_abs_sum
-
-
 def absolute_parameters_fitness(ga_instance, chromosome):
     """
     Fitness function to minimize the sum of absolute values of bike parameters.
