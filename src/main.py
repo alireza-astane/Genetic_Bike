@@ -7,51 +7,18 @@ from evolution.evo import GeneticAlgorithm
 import random
 
 # Environments parameters
-steps = 200
+steps = 20
 my_env = env(-9.8)
 
 # Genetic Algorithm parameters
 population_size = 5
 num_bits_per_individual = 28  # Adjust based on your scale and precision needs
-num_generations = 10
+num_generations = 2
 crossover_probability = 0.7
 mutation_probability = 0.05
 num_parents = 2
 tolerance = 0.01
 
-<<<<<<< HEAD
-=======
-my_bike_1 = Bike(
-    1,
-    1,
-    2,
-    3,
-    1,
-    8,
-    1,
-    2,
-    3,
-    0,
-    1,
-    5,
-    2,
-    8,
-    5,
-    2,
-    100,
-    100,
-    100,
-    100,
-    100,
-    100,
-    10,
-    10,
-    10,
-    10,
-    10,
-    10,
-)
->>>>>>> main
 
 
 # Create Genetic Algorithm instance
@@ -71,34 +38,34 @@ ga = GeneticAlgorithm(
 for _ in range(population_size):
     bike = Bike(
 
-    1 + 0.2 * np.random.rand(),
-    1 + 0.2 * np.random.rand(),
-    2 + 0.2 * np.random.rand(),
-    3 + 0.2 * np.random.rand(),
-    1 + 0.2 * np.random.rand(),
-    4 + 0.2 * np.random.rand(),
-    1 + 0.2 * np.random.rand(),
-    2 + 0.2 * np.random.rand(),
-    3 + 0.2 * np.random.rand(),
-    0 + 0.2 * np.random.rand(),
-    1 + 0.2 * np.random.rand(),
-    3 + 0.2 * np.random.rand(),
-    2 + 0.2 * np.random.rand(),
-    4 + 0.2 * np.random.rand(),
-    3 + 0.2 * np.random.rand(),
-    2 + 0.2 * np.random.rand(),
+    1   + 0.2 * np.random.rand(),
+    1   + 0.2 * np.random.rand(),
+    2   + 0.2 * np.random.rand(),
+    3   + 0.2 * np.random.rand(),
+    1   + 0.2 * np.random.rand(),
+    4   + 0.2 * np.random.rand(),
+    1   + 0.2 * np.random.rand(),
+    2   + 0.2 * np.random.rand(),
+    3   + 0.2 * np.random.rand(),
+    0   + 0.2 * np.random.rand(),
+    1   + 0.2 * np.random.rand(),
+    3,
+    2   + 0.2 * np.random.rand(),
+    4   + 0.2 * np.random.rand(),
+    3,
+    2   + 0.2 * np.random.rand(),
     100 + 2 * np.random.rand(),
     100 + 2 * np.random.rand(),
     100 + 2 * np.random.rand(),
     100 + 2 * np.random.rand(),
     100 + 2 * np.random.rand(),
     100 + 2 * np.random.rand(),
-    10 + 1 * np.random.rand(),
-    10 + 1 * np.random.rand(),
-    10 + 1 * np.random.rand(),
-    10 + 1 * np.random.rand(),
-    10 + 1 * np.random.rand(),
-    10 + 1 * np.random.rand(),
+    10  + 1 * np.random.rand(),
+    10  + 1 * np.random.rand(),
+    10  + 1 * np.random.rand(),
+    10  + 1 * np.random.rand(),
+    10  + 1 * np.random.rand(),
+    10  + 1 * np.random.rand(),
 
     )
     ga.bikes.append(bike)
@@ -156,11 +123,6 @@ print(scores)
 
 trajectory, sizes = my_env.get_trajectory_sizes()
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> main
 my_vis = Vis(trajectory[:, 0], sizes[0], steps, my_env.ground)
 
 my_vis.run()
