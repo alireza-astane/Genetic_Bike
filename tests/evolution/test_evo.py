@@ -50,7 +50,7 @@ def test_geneticAlgorithm():
      # Genetic Algorithm parameters
     population_size = 50
     num_bits_per_individual = 28  # Adjust based on your scale and precision needs
-    num_generations = 10
+    num_generations = 100
     crossover_probability = 0.7
     mutation_probability = 0.05
     num_parents = 10
