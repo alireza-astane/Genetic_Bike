@@ -438,10 +438,6 @@ class env:
 
         mass_center_change[failed] = 0
 
-        print("delta_X:", delta_X)
-        print("self.ms:", self.ms)
-        print("mass_center_change:", mass_center_change)
-
         return mass_center_change
 
     def run(self, n):
