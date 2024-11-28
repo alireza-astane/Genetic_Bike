@@ -78,6 +78,7 @@ print(ga.population)
 
 # Calculate fitness
 
+
 trajectory, scores = my_env.run(steps)
 ga.populationFitness = scores
 print("Initial fitness:")
