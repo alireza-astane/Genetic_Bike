@@ -7,13 +7,13 @@ from evolution.evo import GeneticAlgorithm
 import random
 
 # Environments parameters
-steps = 10
+steps = 100
 my_env = env(-9.8)
 
 # Genetic Algorithm parameters
-population_size = 5
+population_size = 3
 num_bits_per_individual = 28  # Adjust based on your scale and precision needs
-num_generations = 2
+num_generations = 10
 crossover_probability = 0.7
 mutation_probability = 0.05
 num_parents = 2
