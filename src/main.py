@@ -7,7 +7,7 @@ from evolution.evo import GeneticAlgorithm
 import random
 
 # Environments parameters
-steps = 200
+steps = 10
 my_env = env(-9.8)
 
 # Genetic Algorithm parameters
@@ -33,43 +33,60 @@ ga = GeneticAlgorithm(
     tolerance=tolerance
 )
 
-
-# Create some dummy bikes (this step might be different depending on your actual Bike class implementation)
 for _ in range(population_size):
     bike = Bike(
-
-    1 + 0.2 * np.random.rand(),
-    1 + 0.2 * np.random.rand(),
-    2 + 0.2 * np.random.rand(),
-    3 + 0.2 * np.random.rand(),
-    1 + 0.2 * np.random.rand(),
-    4 + 0.2 * np.random.rand(),
-    1 + 0.2 * np.random.rand(),
-    2 + 0.2 * np.random.rand(),
-    3 + 0.2 * np.random.rand(),
-    0 + 0.2 * np.random.rand(),
-    1 + 0.2 * np.random.rand(),
-    3 + 0.2 * np.random.rand(),
-    2 + 0.2 * np.random.rand(),
-    4 + 0.2 * np.random.rand(),
-    3 + 0.2 * np.random.rand(),
-    2 + 0.2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    100 + 2 * np.random.rand(),
-    10 + 1 * np.random.rand(),
-    10 + 1 * np.random.rand(),
-    10 + 1 * np.random.rand(),
-    10 + 1 * np.random.rand(),
-    10 + 1 * np.random.rand(),
-    10 + 1 * np.random.rand(),
-
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
+        random.randint(1, 10)
+        
     )
     ga.bikes.append(bike)
     ga.bike2array(len(ga.bikes) - 1, bike)
+
+
+# Create some dummy bikes (this step might be different depending on your actual Bike class implementation)
+# for _ in range(population_size):
+#     bike = Bike(
+
+#     1 + 0.2 * np.random.rand(),
+#     1 + 0.2 * np.random.rand(),
+#     2 + 0.2 * np.random.rand(),
+#     3 + 0.2 * np.random.rand(),
+#     1 + 0.2 * np.random.rand(),
+#     4 + 0.2 * np.random.rand(),
+#     1 + 0.2 * np.random.rand(),
+#     2 + 0.2 * np.random.rand(),
+#     3 + 0.2 * np.random.rand(),
+#     0 + 0.2 * np.random.rand(),
+#     1 + 0.2 * np.random.rand(),
+#     3 + 0.2 * np.random.rand(),
+#     2 + 0.2 * np.random.rand(),
+#     4 + 0.2 * np.random.rand(),
+#     3 + 0.2 * np.random.rand(),
+#     2 + 0.2 * np.random.rand(),
+#     100 + 2 * np.random.rand(),
+#     100 + 2 * np.random.rand(),
+#     100 + 2 * np.random.rand(),
+#     100 + 2 * np.random.rand(),
+#     100 + 2 * np.random.rand(),
+#     100 + 2 * np.random.rand(),
+#     10 + 1 * np.random.rand(),
+#     10 + 1 * np.random.rand(),
+#     10 + 1 * np.random.rand(),
+#     10 + 1 * np.random.rand(),
+#     10 + 1 * np.random.rand(),
+#     10 + 1 * np.random.rand(),
+
+#     )
+#     ga.bikes.append(bike)
+#     ga.bike2array(len(ga.bikes) - 1, bike)
 
 my_env.set_bikes(ga.bikes)
 
