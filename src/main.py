@@ -13,12 +13,11 @@ my_env = env(-9.8)
 # Genetic Algorithm parameters
 population_size = 5
 num_bits_per_individual = 28  # Adjust based on your scale and precision needs
-num_generations = 10
+num_generations = 2
 crossover_probability = 0.7
 mutation_probability = 0.05
 num_parents = 2
 tolerance = 0.01
-
 
 
 # Create Genetic Algorithm instance
@@ -30,11 +29,12 @@ ga = GeneticAlgorithm(
     mutationProbability=mutation_probability,
     numParents=num_parents,
     fitnessFunction=None,
-    tolerance=tolerance
+    tolerance=tolerance,
 )
 
 for _ in range(population_size):
     bike = Bike(
+
         random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
         random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
         random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
@@ -45,7 +45,7 @@ for _ in range(population_size):
         random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
         random.randint(1, 10), random.randint(1, 10), random.randint(1, 10),
         random.randint(1, 10)
-        
+
     )
     ga.bikes.append(bike)
     ga.bike2array(len(ga.bikes) - 1, bike)
@@ -95,6 +95,7 @@ print(ga.population)
 
 # Calculate fitness
 
+
 trajectory, scores = my_env.run(steps)
 ga.populationFitness = scores
 print("Initial fitness:")
@@ -102,7 +103,7 @@ print(ga.populationFitness)
 
 for i in range(ga.numGenerations):
     print(f"\nGeneration {i + 1}:")
-    
+
     ga.elites[i] = ga.population[np.argmax(ga.populationFitness)].copy()
     print("Elites:")
     print(ga.elites[i])
@@ -122,10 +123,10 @@ for i in range(ga.numGenerations):
     ga.population[np.argmin(ga.populationFitness)] = ga.elites[i].copy()
 
     ga.calculateStatistics()
-    
+
     trajectory, scores = my_env.run(steps)
     ga.populationFitness = scores
-    
+
     print("Generation Fitness:")
     print(ga.populationFitness)
 
@@ -135,12 +136,9 @@ for i in range(ga.numGenerations):
         break
 
 
-
 print(scores)
 
 trajectory, sizes = my_env.get_trajectory_sizes()
-
-
 
 my_vis = Vis(trajectory[:, 0], sizes[0], steps, my_env.ground)
 
