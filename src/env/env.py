@@ -10,7 +10,6 @@ env
 """
 
 import numpy as np
-from bike.bike import Bike
 from tqdm import tqdm
 
 
