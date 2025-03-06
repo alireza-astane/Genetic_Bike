@@ -1,4 +1,4 @@
-from env import *
+from env import env
 import numpy as np
 from bike import Bike
 
