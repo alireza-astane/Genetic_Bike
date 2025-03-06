@@ -1,4 +1,4 @@
-from evo import GeneticAlgorithm
+from evolution import GeneticAlgorithm
 from bike import Bike
 import numpy as np
 import random
