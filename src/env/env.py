@@ -13,7 +13,7 @@ import numpy as np
 from tqdm import tqdm
 
 
-class env:
+class Environment:
     """
     Environment class for simulating bike dynamics.
 

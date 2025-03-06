@@ -1,14 +1,13 @@
 from bike.bike import Bike
-from env.env import env
+from env.env import Environment
 import numpy as np
-from pprint import pprint
 from visualiation.vis import Vis
 from evolution.evo import GeneticAlgorithm
 import random
 
 # Environments parameters
 steps = 100
-my_env = env(-9.8)
+my_env = Environment(-9.8)
 
 bike = Bike(
     0,

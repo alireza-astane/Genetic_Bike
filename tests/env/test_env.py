@@ -1,11 +1,11 @@
-from env import env
+from env import Environment
 import numpy as np
 from bike import Bike
 from tqdm import tqdm
 
 
 def test_env_init():
-    test_env = env(
+    test_env = Environment(
         g=-9.8,
         elasticiity=0,
         x_max=1000,
@@ -53,7 +53,7 @@ def test_env_init():
 
 
 def test_set_bikes():
-    test_env = env(
+    test_env = Environment(
         g=-9.8,
         elasticiity=0,
         x_max=1000,
@@ -172,7 +172,7 @@ def test_set_bikes():
 
 
 def test_get_R():
-    test_env = env(
+    test_env = Environment(
         g=-9.8,
         elasticiity=0,
         x_max=1000,
@@ -289,7 +289,7 @@ def test_get_R():
 
 
 def test_get_K():
-    test_env = env(
+    test_env = Environment(
         g=-9.8,
         elasticiity=0,
         x_max=1000,
@@ -406,7 +406,7 @@ def test_get_K():
 
 
 def test_get_B():
-    test_env = env(
+    test_env = Environment(
         g=-9.8,
         elasticiity=0,
         x_max=1000,
@@ -523,7 +523,7 @@ def test_get_B():
 
 
 def test_get_Ms():
-    test_env = env(
+    test_env = Environment(
         g=-9.8,
         elasticiity=0,
         x_max=1000,
@@ -640,7 +640,7 @@ def test_get_Ms():
 
 
 def test_get_torks():
-    test_env = env(
+    test_env = Environment(
         g=-9.8,
         elasticiity=0,
         x_max=1000,
@@ -757,7 +757,7 @@ def test_get_torks():
 
 
 def test_get_init_lenghs():
-    test_env = env(
+    test_env = Environment(
         g=-9.8,
         elasticiity=0,
         x_max=1000,
@@ -874,7 +874,7 @@ def test_get_init_lenghs():
 
 
 def test_get_Radius():
-    test_env = env(
+    test_env = Environment(
         g=-9.8,
         elasticiity=0,
         x_max=1000,
@@ -991,7 +991,7 @@ def test_get_Radius():
 
 
 def test_get_connection_info():
-    test_env = env()
+    test_env = Environment()
     pos = np.array([[0, 0]])
     connection_info = test_env.get_connection_info(pos)
     assert connection_info is not None
