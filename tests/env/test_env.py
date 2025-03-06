@@ -1,4 +1,4 @@
-from env import Environment
+from env.env import Environment
 import numpy as np
 from bike import Bike
 from tqdm import tqdm
