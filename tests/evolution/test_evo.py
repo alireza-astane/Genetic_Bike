@@ -1,5 +1,5 @@
-from evolution.evo import GeneticAlgorithm
-from bike.bike import Bike
+from evo import GeneticAlgorithm
+from bike import Bike
 import numpy as np
 import random
 import matplotlib.pyplot as plt

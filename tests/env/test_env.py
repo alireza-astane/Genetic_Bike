@@ -1,6 +1,6 @@
-from env.env import *
+from env import *
 import numpy as np
-from bike.bike import Bike
+from bike import Bike
 
 
 def test_env_init():

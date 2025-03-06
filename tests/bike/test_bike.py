@@ -1,5 +1,5 @@
 # import pytest
-from bike.bike import Bike
+from bike import Bike
 
 
 def test_get_get_masses():
