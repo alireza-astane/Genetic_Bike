@@ -1,6 +1,6 @@
 # Genetic_Bike_ICTP_2024
 
-
+![](./animation.gif)
 
 ## Getting started
 
