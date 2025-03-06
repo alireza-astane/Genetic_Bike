@@ -1,6 +1,7 @@
 from env import env
 import numpy as np
 from bike import Bike
+from tqdm import tqdm
 
 
 def test_env_init():
