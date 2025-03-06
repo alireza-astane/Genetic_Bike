@@ -1,3 +1,5 @@
+
+
 # Genetic_Bike_ICTP_2024
 
 ![](./animation.gif)
@@ -68,6 +70,62 @@ Within a particular ecosystem, there may be a common way of installing things, s
 
 ## Usage
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+
+
+## Using Docker
+
+To run this project with Docker, follow these steps:
+
+### Prerequisites
+
+Make sure you have Docker installed on your machine. You can download Docker from [here](https://www.docker.com/products/docker-desktop).
+
+### Building the Docker Image
+
+1. Clone the repository:
+    ```sh
+    git clone https://git.smr3696.ictp.it/Astane/genetic_bike_ictp_2024.git
+    cd genetic_bike_ictp_2024
+    ```
+
+2. Build the Docker image:
+    ```sh
+    docker build -t genetic_bike_ictp_2024 .
+    ```
+
+### Running the Docker Container
+
+1. Run the Docker container:
+    ```sh
+    docker run -d -p 8080:80 --name genetic_bike_container genetic_bike_ictp_2024
+    ```
+
+2. Access the application:
+    Open your web browser and go to `http://localhost:8080`.
+
+### Stopping the Docker Container
+
+To stop the running container, use the following command:
+```sh
+docker stop genetic_bike_container
+```
+
+### Removing the Docker Container
+
+To remove the stopped container, use the following command:
+```sh
+docker rm genetic_bike_container
+```
+
+### Removing the Docker Image
+
+To remove the Docker image, use the following command:
+```sh
+docker rmi genetic_bike_ictp_2024
+```
+
+
+
 
 ## Support
 Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
