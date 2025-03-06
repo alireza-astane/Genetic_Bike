@@ -78,6 +78,12 @@ class Vis:
         ani = animation.FuncAnimation(
             self.figure, self.animate, np.arange(1, self.steps), interval=1
         )
+
+        writer = animation.PillowWriter(
+            fps=15, metadata=dict(artist="Me"), bitrate=1800
+        )
+        ani.save("animation.gif", writer=writer)
+
         plt.show()
 
     def animate(self, i):

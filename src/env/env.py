@@ -2,7 +2,7 @@
 env.py
 ======
 
-This module contains the `env` class, which simulates bike dynamics in a given environment. 
+This module contains the `env` class, which simulates bike dynamics in a given environment.
 It provides methods to set up the environment, run simulations, and evaluate the performance of bikes.
 
 Classes
